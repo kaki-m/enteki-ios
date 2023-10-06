@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftSVG
 
 struct ContentView: View {
     init() {
@@ -22,15 +23,19 @@ struct ContentView: View {
         let color = UIColor(red: 122/255, green: 191/255, blue: 120/255, alpha: 1.0)
         let bodyColor = Color(uiColor: color)
         NavigationView {
-            
-                        
-                        ArcheryTargetView() //的を表示
-                        .navigationBarTitle("点数")
-                        .navigationBarTitleDisplayMode(.inline)
-                        .frame(maxWidth: .infinity,
-                                   maxHeight: .infinity)
-                        .background(bodyColor)
+            ZStack{
+                
+                ArcheryTargetView() //的を表示
+                    .navigationBarTitle("点数")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .frame(maxWidth: .infinity,
+                           maxHeight: .infinity)
+                    .background(bodyColor)
+                HitMarkView()// ヒットマーカーを表示
+                    .background(Color.clear)
+            }
                     }
+        .navigationViewStyle(StackNavigationViewStyle()) //ipadで表示するため
         .background(bodyColor)
         .edgesIgnoringSafeArea(.all)
         TabBarView()
@@ -71,6 +76,7 @@ struct TabBarView: View {
 }
 
 struct ArcheryTargetView: View {
+    @State private var positions: [CGPoint] = Array(repeating: .zero, count:12)  // 12個のヒットマーカーの座標を保存するための変数
     var body: some View {
         ZStack {
             Circle()
@@ -94,5 +100,83 @@ struct ArcheryTargetView: View {
                 .frame(width: 56, height: 56)
         }
         .background(Color.clear)
+        
+    }
+}
+
+struct HitMarkView: View{
+    @State private var positions: [CGPoint] = []  // 12個のヒットマークの座標を保存するための変数
+    // let hitmarkColor = Color(red:255/255,green:200/255,blue:135/255)
+    
+    var body: some View{
+        let hitmarkNum = 0
+        ForEach(positions.indices, id: \.self){ index in
+            if(index % 3 == 0){
+                Image("OomaeHitmark")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width:20, height:20)
+                    .position(x:positions[index].x, y:positions[index].y)
+                    .gesture(
+                        DragGesture(minimumDistance:0)
+                            .onChanged{value in
+                                self.positions[index] = value.location
+                            }
+                            .onEnded{ value in
+                                self.positions[index] = value.location
+                            })
+            }
+            else if(index % 3 == 1){
+                Image("NakaHitmark")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width:20, height:20)
+                    .position(x:positions[index].x, y:positions[index].y)
+                    .gesture(
+                        DragGesture(minimumDistance:0)
+                            .onChanged{value in
+                                self.positions[index] = value.location
+                            }
+                            .onEnded{ value in
+                                self.positions[index] = value.location
+                            })
+            }else if(index % 3 == 2){
+                Image("OtiHitmark")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width:20, height:20)
+                    .position(x:positions[index].x, y:positions[index].y)
+                    .gesture(
+                        DragGesture(minimumDistance:0)
+                            .onChanged{value in
+                                self.positions[index] = value.location
+                            }
+                            .onEnded{ value in
+                                self.positions[index] = value.location
+                            })
+            }
+        }
+        // タップしたときに増えるヒットマークを増やす
+        VStack{
+            Spacer()
+            GeometryReader{ geometry in
+                VStack{
+                    Spacer()
+                    HStack{
+                        Spacer()
+                        Button("ヒットマーク追加"){
+                            //ボタンタップ時のアクション
+                            let newHitMarkPosition = CGPoint(x: geometry.size.width / 1.2, y: geometry.size.height / 1.2)
+                            positions.append(newHitMarkPosition)
+                            print(positions)
+                }
+                        .padding(7)
+                }
+                
+            
+                }
+            }
+        }
+        
     }
 }
