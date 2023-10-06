@@ -110,8 +110,11 @@ struct HitMarkView: View{
     
     var body: some View{
         let hitmarkNum = 0
+        let indexPosition = [1,1,1,2,2,2,3,3,3,4,4,4]  // indexを何本目かに変換するため
         ForEach(positions.indices, id: \.self){ index in
             if(index % 3 == 0){
+                // 何本目かのテキストを決める
+                var subtext = String(indexPosition[index])
                 Image("OomaeHitmark")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -125,8 +128,14 @@ struct HitMarkView: View{
                             .onEnded{ value in
                                 self.positions[index] = value.location
                             })
+                
+                Text(subtext)
+                    .position(x:positions[index].x+10, y:positions[index].y+10)
+                    .foregroundColor(.brown)
             }
             else if(index % 3 == 1){
+                // 何本目かのテキストを決める
+                var subtext = String(indexPosition[index])
                 Image("NakaHitmark")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -140,7 +149,12 @@ struct HitMarkView: View{
                             .onEnded{ value in
                                 self.positions[index] = value.location
                             })
+                Text(subtext)
+                    .foregroundColor(.brown)
+                    .position(x:positions[index].x+10, y:positions[index].y+10)
             }else if(index % 3 == 2){
+                // 何本目かのテキストを決める
+                var subtext = String(indexPosition[index])
                 Image("OtiHitmark")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -154,6 +168,9 @@ struct HitMarkView: View{
                             .onEnded{ value in
                                 self.positions[index] = value.location
                             })
+                Text(subtext)
+                    .position(x:positions[index].x+10, y:positions[index].y+10)
+                    .foregroundColor(.brown)
             }
         }
         // タップしたときに増えるヒットマークを増やす
@@ -164,13 +181,14 @@ struct HitMarkView: View{
                     Spacer()
                     HStack{
                         Spacer()
-                        Button("ヒットマーク追加"){
-                            //ボタンタップ時のアクション
-                            let newHitMarkPosition = CGPoint(x: geometry.size.width / 1.2, y: geometry.size.height / 1.2)
+                        Button(action:{
+                            let newHitMarkPosition = CGPoint(x: geometry.size.width / 1.15, y: geometry.size.height / 1.15)
                             positions.append(newHitMarkPosition)
                             print(positions)
-                }
-                        .padding(7)
+                        },label: {
+                            Image(systemName:"plus.diamond")
+                        })
+                        .padding(15)
                 }
                 
             
