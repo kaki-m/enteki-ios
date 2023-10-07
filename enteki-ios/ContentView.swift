@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftSVG
 
 struct ContentView: View {
+    @State private var positions: [CGPoint] = []  // 12個のヒットマークの座標を保存するための変数
     init() {
             let appearance = UINavigationBarAppearance()
             appearance.configureWithOpaqueBackground()
@@ -31,26 +32,27 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity,
                            maxHeight: .infinity)
                     .background(bodyColor)
-                HitMarkView()// ヒットマーカーを表示
+                HitMarkView(positions: $positions)// ヒットマーカーを表示
                     .background(Color.clear)
             }
                     }
         .navigationViewStyle(StackNavigationViewStyle()) //ipadで表示するため
         .background(bodyColor)
         .edgesIgnoringSafeArea(.all)
-        TabBarView()
+        TabBarView(positions: $positions)
         
     }
 }
 
 struct TabBarView: View {
-         
+    @Binding var positions: [CGPoint]
     var body: some View {
+        let testPositionStr = String(positions.count)
         TabView {
-            Text("現在の点数表")
+            Text(testPositionStr)
                 .tabItem {
                     Image(systemName: "1.circle")
-                    Text("First")
+                    Text("点数表")
                 }
             
             Text("Second Tab")
@@ -76,7 +78,6 @@ struct TabBarView: View {
 }
 
 struct ArcheryTargetView: View {
-    @State private var positions: [CGPoint] = Array(repeating: .zero, count:12)  // 12個のヒットマーカーの座標を保存するための変数
     var body: some View {
         ZStack {
             Circle()
@@ -105,9 +106,7 @@ struct ArcheryTargetView: View {
 }
 
 struct HitMarkView: View{
-    @State private var positions: [CGPoint] = []  // 12個のヒットマークの座標を保存するための変数
-    // let hitmarkColor = Color(red:255/255,green:200/255,blue:135/255)
-    
+    @Binding var positions: [CGPoint]  // ContentViewから持ってくる
     var body: some View{
         let indexPosition = [1,1,1,2,2,2,3,3,3,4,4,4]  // indexを何本目かに変換するため
         ForEach(positions.indices, id: \.self){ index in
