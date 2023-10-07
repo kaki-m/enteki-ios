@@ -183,8 +183,12 @@ struct HitMarkView: View{
                         Spacer()
                         Button(action:{
                             let newHitMarkPosition = CGPoint(x: geometry.size.width / 1.15, y: geometry.size.height / 1.15)
-                            positions.append(newHitMarkPosition)
-                            print(positions)
+                            if(positions.count < 12){
+                                positions.append(newHitMarkPosition)
+                                print(positions)
+                            }else{
+                                print("すでにマークは12個出ています")
+                            }
                         },label: {
                             Image(systemName:"plus.diamond")
                         })
@@ -198,3 +202,5 @@ struct HitMarkView: View{
         
     }
 }
+
+
