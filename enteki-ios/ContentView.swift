@@ -109,12 +109,11 @@ struct HitMarkView: View{
     // let hitmarkColor = Color(red:255/255,green:200/255,blue:135/255)
     
     var body: some View{
-        let hitmarkNum = 0
         let indexPosition = [1,1,1,2,2,2,3,3,3,4,4,4]  // indexを何本目かに変換するため
         ForEach(positions.indices, id: \.self){ index in
             if(index % 3 == 0){
                 // 何本目かのテキストを決める
-                var subtext = String(indexPosition[index])
+                let subtext = String(indexPosition[index])
                 Image("OomaeHitmark")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -135,7 +134,7 @@ struct HitMarkView: View{
             }
             else if(index % 3 == 1){
                 // 何本目かのテキストを決める
-                var subtext = String(indexPosition[index])
+                let subtext = String(indexPosition[index])
                 Image("NakaHitmark")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -154,7 +153,7 @@ struct HitMarkView: View{
                     .position(x:positions[index].x+10, y:positions[index].y+10)
             }else if(index % 3 == 2){
                 // 何本目かのテキストを決める
-                var subtext = String(indexPosition[index])
+                let subtext = String(indexPosition[index])
                 Image("OtiHitmark")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
