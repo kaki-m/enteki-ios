@@ -10,6 +10,8 @@ import SwiftSVG
 
 struct ContentView: View {
     @State private var positions: [CGPoint] = []  // 12個のヒットマークの座標を保存するための変数
+    @State private var targetCenterPosition: CGPoint = CGPoint(x:-1,y:-1) // 的の中心座標を共有するための変数
+    @State private var targetDiameter: CGFloat = 280
     init() {
             let appearance = UINavigationBarAppearance()
             appearance.configureWithOpaqueBackground()
@@ -18,7 +20,6 @@ struct ContentView: View {
             appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
             UINavigationBar.appearance().standardAppearance = appearance
             UINavigationBar.appearance().scrollEdgeAppearance = appearance
-        
         }
     var body: some View {
         let color = UIColor(red: 122/255, green: 191/255, blue: 120/255, alpha: 1.0)
@@ -26,7 +27,7 @@ struct ContentView: View {
         NavigationView {
             ZStack{
                 
-                ArcheryTargetView() //的を表示
+                ArcheryTargetView(targetCenterPosition: $targetCenterPosition, targetDiameter: $targetDiameter) //的を表示
                     .navigationBarTitle("点数")
                     .navigationBarTitleDisplayMode(.inline)
                     .frame(maxWidth: .infinity,
@@ -39,15 +40,20 @@ struct ContentView: View {
         .navigationViewStyle(StackNavigationViewStyle()) //ipadで表示するため
         .background(bodyColor)
         .edgesIgnoringSafeArea(.all)
-        TabBarView(positions: $positions)
+        TabBarView(positions: $positions,
+                   targetCenterPosition: $targetCenterPosition,
+                   targetDiameter: $targetDiameter)
         
     }
 }
 
 struct TabBarView: View {
-    @Binding var positions: [CGPoint]
+    @Binding var positions: [CGPoint]  // ヒットマークの位置を共有(12個まで)
+    @Binding var targetCenterPosition: CGPoint  // 中心からヒットマークの距離でどこに当たったのかを計算
+    @Binding var targetDiameter: CGFloat  // 直径の大きさを共有(ここから黄色の範囲や青の範囲を計算する
     var body: some View {
         let testPositionStr = String(positions.count)
+        let targetCenterPositionStr = "(\(targetCenterPosition))"
         TabView {
             Text(testPositionStr)
                 .tabItem {
@@ -55,7 +61,7 @@ struct TabBarView: View {
                     Text("点数表")
                 }
             
-            Text("Second Tab")
+            Text(targetCenterPositionStr)
                 .tabItem {
                     Image(systemName: "2.circle")
                     Text("Second")
@@ -78,30 +84,38 @@ struct TabBarView: View {
 }
 
 struct ArcheryTargetView: View {
+    @Binding var targetCenterPosition: CGPoint  // 的の中心座標をContentViewに伝えるために受け取る
+    @Binding var targetDiameter: CGFloat  // 的の直径を共有
     var body: some View {
-        ZStack {
-            Circle()
-                .fill(Color.white)
-                .frame(width: 280, height: 280)
-                .overlay(  //外枠に黒い線を表示
-                    Circle()
-                    .stroke(Color.black,lineWidth: 2)
-                )
-            Circle()
-                .fill(Color.black)
-                .frame(width: 224, height: 224)
-            Circle()
-                .fill(Color.blue)
-                .frame(width: 168, height: 168)
-            Circle()
-                .fill(Color.red)
-                .frame(width: 112, height: 112)
-            Circle()
-                .fill(Color.yellow)
-                .frame(width: 56, height: 56)
+        GeometryReader { geometry in
+            ZStack {
+                Circle()
+                    .fill(Color.white)
+                    .frame(width: targetDiameter, height: targetDiameter)
+                    .overlay(  //外枠に黒い線を表示
+                        Circle()
+                        .stroke(Color.black,lineWidth: 2)
+                    )
+                    .position(x: geometry.size.width/2, y: geometry.size.height/2)
+                    .onAppear {  // 出現時に中央の座標を共有する
+                        let rect = geometry.frame(in: .local)
+                        targetCenterPosition = CGPoint(x: rect.midX, y: rect.midY)
+                    }
+                Circle()
+                    .fill(Color.black)
+                    .frame(width: (targetDiameter/5)*4, height: (targetDiameter/5)*4)
+                Circle()
+                    .fill(Color.blue)
+                    .frame(width: (targetDiameter/5)*3, height: (targetDiameter/5)*3)
+                Circle()
+                    .fill(Color.red)
+                    .frame(width: (targetDiameter/5)*2, height: (targetDiameter/5)*2)
+                Circle()
+                    .fill(Color.yellow)
+                    .frame(width: targetDiameter/5, height: targetDiameter/5)
+            }
+            .background(Color.clear)
         }
-        .background(Color.clear)
-        
     }
 }
 
