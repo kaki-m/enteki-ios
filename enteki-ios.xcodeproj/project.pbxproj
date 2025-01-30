@@ -15,6 +15,7 @@
 		3F64864C2AC801E0008DAE00 /* enteki_iosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F64864B2AC801E0008DAE00 /* enteki_iosUITests.swift */; };
 		3F64864E2AC801E0008DAE00 /* enteki_iosUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F64864D2AC801E0008DAE00 /* enteki_iosUITestsLaunchTests.swift */; };
 		3F94209A2ACE6E6700EB178A /* SwiftSVG in Frameworks */ = {isa = PBXBuildFile; productRef = 3F9420992ACE6E6700EB178A /* SwiftSVG */; };
+		602275042BC828400040AE06 /* ScoreBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602275032BC828400040AE06 /* ScoreBoard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,7 @@
 		3F6486472AC801E0008DAE00 /* enteki-iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "enteki-iosUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F64864B2AC801E0008DAE00 /* enteki_iosUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = enteki_iosUITests.swift; sourceTree = "<group>"; };
 		3F64864D2AC801E0008DAE00 /* enteki_iosUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = enteki_iosUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		602275032BC828400040AE06 /* ScoreBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreBoard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,7 @@
 			children = (
 				3F6486302AC801DE008DAE00 /* enteki_iosApp.swift */,
 				3F6486322AC801DE008DAE00 /* ContentView.swift */,
+				602275032BC828400040AE06 /* ScoreBoard.swift */,
 				3F6486342AC801E0008DAE00 /* Assets.xcassets */,
 				3F6486362AC801E0008DAE00 /* Preview Content */,
 			);
@@ -265,6 +268,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				602275042BC828400040AE06 /* ScoreBoard.swift in Sources */,
 				3F6486332AC801DE008DAE00 /* ContentView.swift in Sources */,
 				3F6486312AC801DE008DAE00 /* enteki_iosApp.swift in Sources */,
 			);
@@ -430,6 +434,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"enteki-ios/Preview Content\"";
+				DEVELOPMENT_TEAM = S2U6ASRY4G;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -458,6 +463,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"enteki-ios/Preview Content\"";
+				DEVELOPMENT_TEAM = S2U6ASRY4G;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
