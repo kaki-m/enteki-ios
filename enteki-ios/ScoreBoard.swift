@@ -1,50 +1,56 @@
 import SwiftUI
 
 struct ScoreBoard: View {
-    @EnvironmentObject var arrowData: ArrowData
-    
     let rows = ["大前", "中", "落ち"]
-    let columns = [1, 2, 3, 4]
+    let columns = ["1", "2", "3", "4"]
+
+    @State private var scores: [[String]] = [
+        ["10", "5", "-", "-"],
+        ["0", "7", "-", "-"],
+        ["8", "3", "-", "-"]
+    ]
 
     var body: some View {
-        VStack {
-            Text("得点表")
-                .font(.headline)
-
-            // 得点表の作成
-                    GridStack(rows: 3, columns: 3) { row, column in
-                        Text("\(row), \(column)")
-                            .frame(width: 60, height: 60)
-                            .background(Color.yellow)
-            }
-            .padding()
-            .border(Color.black, width: 2)
-        }
-    }
-    
-    // 矢のスコアを計算する関数（仮実装）
-    func getScore(for position: CGPoint) -> Int {
-        return Int.random(in: 0...10) // ここではランダム（実際には座標を分析して決定）
-    }
-}
-
-// 汎用的なGridStackを定義
-struct GridStack<Content: View>: View {
-    let rows: Int
-    let columns: Int
-    let content: (Int, Int) -> Content
-    
-    var body: some View {
-        VStack(spacing: 5) {
-            ForEach(0..<rows, id: \.self) { row in
-                HStack(spacing: 5) {
-                    ForEach(0..<columns, id: \.self) { column in
-                        content(row, column)
-                            .frame(width: 60, height: 60)
-                            .border(Color.gray, width: 1)
+        GeometryReader { geometry in
+            let cellWidth = geometry.size.width / CGFloat(columns.count + 1) // セル幅を動的計算
+            let cellHeight = geometry.size.height / CGFloat(rows.count + 2) // セル高さを動的計算
+        
+            VStack(spacing: 2) {
+                // ヘッダー
+                HStack(spacing: 2) {
+                    Text("")
+                        .frame(width: cellWidth-20, height: cellHeight) // 左上の空白セル
+                    
+                    ForEach(columns, id: \.self) { column in
+                        Text(column)
+                            .bold()
+                            .frame(width: cellWidth-5, height: cellHeight)
+                            .background(Color.gray.opacity(0.3))
+                            .border(Color.black, width: 1)
                     }
                 }
+
+                // 本体
+                ForEach(0..<rows.count, id: \.self) { row in
+                    HStack(spacing: 2) {
+                        Text(rows[row])
+                            .bold()
+                            .frame(width: cellWidth-20, height: cellHeight)
+                            .background(Color.gray.opacity(0.3))
+                            .border(Color.black, width: 1)
+
+                        ForEach(0..<columns.count, id: \.self) { col in
+                                Text(scores[row][col])
+                                    .frame(width: cellWidth-5, height: cellHeight)
+                                    .background(Color.white)
+                                    .border(Color.black, width: 1)
+                            }
+                        }
+                    }
+                
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+            .padding()
         }
     }
 }
