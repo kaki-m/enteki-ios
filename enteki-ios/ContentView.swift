@@ -55,10 +55,10 @@ struct TabBarView: View {
         let testPositionStr = String(positions.count)
         let targetCenterPositionStr = "(\(targetCenterPosition))"
         TabView {
-            Text(testPositionStr)
+            ScoreBoard(positions: $positions)
                 .tabItem {
                     Image(systemName: "1.circle")
-                    Text("点数表")
+                    Text("")
                 }
             
             Text(targetCenterPositionStr)
