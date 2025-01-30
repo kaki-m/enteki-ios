@@ -1,26 +1,50 @@
-//
-//  ScoreBoard.swift
-//  enteki-ios
-//
-//  Created by 柿崎愛斗 on 2024/04/11.
-//
-
 import SwiftUI
 
 struct ScoreBoard: View {
-    @Binding var positions: [CGPoint]
+    @EnvironmentObject var arrowData: ArrowData
+    
+    let rows = ["大前", "中", "落ち"]
+    let columns = [1, 2, 3, 4]
+
     var body: some View {
-        Text("得点表")
+        VStack {
+            Text("得点表")
+                .font(.headline)
+
+            // 得点表の作成
+                    GridStack(rows: 3, columns: 3) { row, column in
+                        Text("\(row), \(column)")
+                            .frame(width: 60, height: 60)
+                            .background(Color.yellow)
+            }
+            .padding()
+            .border(Color.black, width: 2)
+        }
+    }
+    
+    // 矢のスコアを計算する関数（仮実装）
+    func getScore(for position: CGPoint) -> Int {
+        return Int.random(in: 0...10) // ここではランダム（実際には座標を分析して決定）
     }
 }
 
-#Preview {
-    var testData: Binding<[CGPoint]> = .constant([
-        CGPoint(x: 100, y: 200),
-        CGPoint(x: 150, y: 250),
-        CGPoint(x: 200, y: 300),
-        CGPoint(x: 250, y: 350),
-        CGPoint(x: 300, y: 400)
-    ])
-    ScoreBoard(positions: testData)
+// 汎用的なGridStackを定義
+struct GridStack<Content: View>: View {
+    let rows: Int
+    let columns: Int
+    let content: (Int, Int) -> Content
+    
+    var body: some View {
+        VStack(spacing: 5) {
+            ForEach(0..<rows, id: \.self) { row in
+                HStack(spacing: 5) {
+                    ForEach(0..<columns, id: \.self) { column in
+                        content(row, column)
+                            .frame(width: 60, height: 60)
+                            .border(Color.gray, width: 1)
+                    }
+                }
+            }
+        }
+    }
 }

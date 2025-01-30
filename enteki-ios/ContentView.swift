@@ -9,9 +9,7 @@ import SwiftUI
 import SwiftSVG
 
 struct ContentView: View {
-    @State private var positions: [CGPoint] = []  // 12個のヒットマークの座標を保存するための変数
-    @State private var targetCenterPosition: CGPoint = CGPoint(x:-1,y:-1) // 的の中心座標を共有するための変数
-    @State private var targetDiameter: CGFloat = 280
+    @EnvironmentObject var arrowData: ArrowData // 環境オブジェクトとして受け取る
     init() {
             let appearance = UINavigationBarAppearance()
             appearance.configureWithOpaqueBackground()
@@ -22,197 +20,169 @@ struct ContentView: View {
             UINavigationBar.appearance().scrollEdgeAppearance = appearance
         }
     var body: some View {
-        let color = UIColor(red: 122/255, green: 191/255, blue: 120/255, alpha: 1.0)
-        let bodyColor = Color(uiColor: color)
-        NavigationView {
-            ZStack{
-                
-                ArcheryTargetView(targetCenterPosition: $targetCenterPosition, targetDiameter: $targetDiameter) //的を表示
-                    .navigationBarTitle("点数")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .frame(maxWidth: .infinity,
-                           maxHeight: .infinity)
-                    .background(bodyColor)
-                HitMarkView(positions: $positions)// ヒットマーカーを表示
-                    .background(Color.clear)
+            let color = UIColor(red: 122/255, green: 191/255, blue: 120/255, alpha: 1.0)
+            let bodyColor = Color(uiColor: color)
+            NavigationView {
+                ZStack {
+                    KyudoTargetView()
+                        .navigationBarTitle("点数")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(bodyColor)
+                    
+                    HitMarkView()
+                        .background(Color.clear)
+                }
             }
-                    }
-        .navigationViewStyle(StackNavigationViewStyle()) //ipadで表示するため
-        .background(bodyColor)
-        .edgesIgnoringSafeArea(.all)
-        TabBarView(positions: $positions,
-                   targetCenterPosition: $targetCenterPosition,
-                   targetDiameter: $targetDiameter)
-        
+            .navigationViewStyle(StackNavigationViewStyle()) // iPad対応
+            .background(bodyColor)
+            .edgesIgnoringSafeArea(.all)
+            TabBarView()
+        }
     }
-}
+
 
 struct TabBarView: View {
-    @Binding var positions: [CGPoint]  // ヒットマークの位置を共有(12個まで)
-    @Binding var targetCenterPosition: CGPoint  // 中心からヒットマークの距離でどこに当たったのかを計算
-    @Binding var targetDiameter: CGFloat  // 直径の大きさを共有(ここから黄色の範囲や青の範囲を計算する
+    @EnvironmentObject var arrowData: ArrowData
+
     var body: some View {
-        let testPositionStr = String(positions.count)
-        let targetCenterPositionStr = "(\(targetCenterPosition))"
+        let targetCenterPositionStr = "(\(arrowData.targetCenterPosition))"
         TabView {
-            ScoreBoard(positions: $positions)
+            ScoreBoard()
                 .tabItem {
                     Image(systemName: "1.circle")
                     Text("")
                 }
-            
+
             Text(targetCenterPositionStr)
                 .tabItem {
                     Image(systemName: "2.circle")
                     Text("Second")
                 }
-            .badge(5)
+                .badge(5)
 
-            
             Text("Third Tab")
                 .tabItem {
                     Image(systemName: "3.circle")
                     Text("Third")
                 }
-            .badge("New")
+                .badge("New")
         }
     }
 }
 
+
 #Preview {
-    ContentView()
+    let testArrowData = ArrowData() // モックデータを作成
+    testArrowData.positions = [
+        CGPoint(x: 100, y: 200),
+        CGPoint(x: 150, y: 250),
+        CGPoint(x: 200, y: 300),
+        CGPoint(x: 250, y: 350),
+        CGPoint(x: 300, y: 400)
+    ]
+    return ScoreBoard()
+        .environmentObject(testArrowData) // 正しく `environmentObject` を渡す
 }
 
-struct ArcheryTargetView: View {
-    @Binding var targetCenterPosition: CGPoint  // 的の中心座標をContentViewに伝えるために受け取る
-    @Binding var targetDiameter: CGFloat  // 的の直径を共有
+struct KyudoTargetView: View {
+    @EnvironmentObject var arrowData: ArrowData
+
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 Circle()
                     .fill(Color.white)
-                    .frame(width: targetDiameter, height: targetDiameter)
-                    .overlay(  //外枠に黒い線を表示
+                    .frame(width: arrowData.targetDiameter, height: arrowData.targetDiameter)
+                    .overlay(
                         Circle()
-                        .stroke(Color.black,lineWidth: 2)
+                        .stroke(Color.black, lineWidth: 2)
                     )
-                    .position(x: geometry.size.width/2, y: geometry.size.height/2)
-                    .onAppear {  // 出現時に中央の座標を共有する
+                    .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
+                    .onAppear {
                         let rect = geometry.frame(in: .local)
-                        targetCenterPosition = CGPoint(x: rect.midX, y: rect.midY)
+                        arrowData.targetCenterPosition = CGPoint(x: rect.midX, y: rect.midY)
                     }
                 Circle()
                     .fill(Color.black)
-                    .frame(width: (targetDiameter/5)*4, height: (targetDiameter/5)*4)
+                    .frame(width: (arrowData.targetDiameter / 5) * 4, height: (arrowData.targetDiameter / 5) * 4)
                 Circle()
                     .fill(Color.blue)
-                    .frame(width: (targetDiameter/5)*3, height: (targetDiameter/5)*3)
+                    .frame(width: (arrowData.targetDiameter / 5) * 3, height: (arrowData.targetDiameter / 5) * 3)
                 Circle()
                     .fill(Color.red)
-                    .frame(width: (targetDiameter/5)*2, height: (targetDiameter/5)*2)
+                    .frame(width: (arrowData.targetDiameter / 5) * 2, height: (arrowData.targetDiameter / 5) * 2)
                 Circle()
                     .fill(Color.yellow)
-                    .frame(width: targetDiameter/5, height: targetDiameter/5)
+                    .frame(width: arrowData.targetDiameter / 5, height: arrowData.targetDiameter / 5)
             }
             .background(Color.clear)
         }
     }
 }
 
-struct HitMarkView: View{
-    @Binding var positions: [CGPoint]  // ContentViewから持ってくる
-    var body: some View{
-        let indexPosition = [1,1,1,2,2,2,3,3,3,4,4,4]  // indexを何本目かに変換するため
-        ForEach(positions.indices, id: \.self){ index in
-            if(index % 3 == 0){
-                // 何本目かのテキストを決める
-                let subtext = String(indexPosition[index])
-                Image("OomaeHitmark")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width:20, height:20)
-                    .position(x:positions[index].x, y:positions[index].y)
-                    .gesture(
-                        DragGesture(minimumDistance:0)
-                            .onChanged{value in
-                                self.positions[index] = value.location
-                            }
-                            .onEnded{ value in
-                                self.positions[index] = value.location
-                            })
-                
-                Text(subtext)
-                    .position(x:positions[index].x+10, y:positions[index].y+10)
-                    .foregroundColor(.brown)
-            }
-            else if(index % 3 == 1){
-                // 何本目かのテキストを決める
-                let subtext = String(indexPosition[index])
-                Image("NakaHitmark")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width:20, height:20)
-                    .position(x:positions[index].x, y:positions[index].y)
-                    .gesture(
-                        DragGesture(minimumDistance:0)
-                            .onChanged{value in
-                                self.positions[index] = value.location
-                            }
-                            .onEnded{ value in
-                                self.positions[index] = value.location
-                            })
-                Text(subtext)
-                    .foregroundColor(.brown)
-                    .position(x:positions[index].x+10, y:positions[index].y+10)
-            }else if(index % 3 == 2){
-                // 何本目かのテキストを決める
-                let subtext = String(indexPosition[index])
-                Image("OtiHitmark")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width:20, height:20)
-                    .position(x:positions[index].x, y:positions[index].y)
-                    .gesture(
-                        DragGesture(minimumDistance:0)
-                            .onChanged{value in
-                                self.positions[index] = value.location
-                            }
-                            .onEnded{ value in
-                                self.positions[index] = value.location
-                            })
-                Text(subtext)
-                    .position(x:positions[index].x+10, y:positions[index].y+10)
-                    .foregroundColor(.brown)
-            }
-        }
-        // タップしたときに増えるヒットマークを増やす
-        VStack{
-            Spacer()
-            GeometryReader{ geometry in
-                VStack{
+
+struct HitMarkView: View {
+    @EnvironmentObject var arrowData: ArrowData
+
+    var body: some View {
+        GeometryReader { geometry in // ここで全体のサイズを取得
+            ZStack {
+                let indexPosition = [1,1,1,2,2,2,3,3,3,4,4,4]
+
+                ForEach(arrowData.positions.indices, id: \.self) { index in
+                    let subtext = String(indexPosition[index])
+                    
+                    Image("OomaeHitmark")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 20, height: 20)
+                        .position(x: arrowData.positions[index].x, y: arrowData.positions[index].y)
+                        .gesture(
+                            DragGesture(minimumDistance: 0)
+                                .onChanged { value in
+                                    let newPosition = limitPosition(value.location, in: geometry.size)
+                                    arrowData.positions[index] = newPosition
+                                }
+                        )
+                    
+                    Text(subtext)
+                        .position(x: arrowData.positions[index].x + 10, y: arrowData.positions[index].y + 10)
+                        .foregroundColor(.brown)
+                }
+
+                VStack {
                     Spacer()
-                    HStack{
+                    HStack {
                         Spacer()
-                        Button(action:{
-                            let newHitMarkPosition = CGPoint(x: geometry.size.width / 1.15, y: geometry.size.height / 1.15)
-                            if(positions.count < 12){
-                                positions.append(newHitMarkPosition)
-                                print(positions)
-                            }else{
-                                print("すでにマークは12個出ています")
+                        Button(action: {
+                            let newHitMarkPosition = CGPoint(x: geometry.size.width / 2, y: geometry.size.height * 0.7)
+                            if arrowData.positions.count < 12 {
+                                arrowData.positions.append(limitPosition(newHitMarkPosition, in: geometry.size))
                             }
-                        },label: {
-                            Image(systemName:"plus.diamond")
-                        })
+                        }) {
+                            Image(systemName: "plus.diamond")
+                        }
                         .padding(15)
-                }
-                
-            
+                    }
                 }
             }
         }
-        
+    }
+
+    // 追加：矢の移動範囲を制限する関数
+    func limitPosition(_ position: CGPoint, in size: CGSize) -> CGPoint {
+        let minX: CGFloat = size.width * 0 // 左端（的のエリア外に出ないように調整）
+        let maxX: CGFloat = size.width * 1  // 右端
+        let minY: CGFloat = size.height * 0.01 // 得点表の下から制限（矢が得点表に入らない）
+        let maxY: CGFloat = size.height * 0.99 // 画面の下すぎないようにする
+
+        let limitedX = min(max(position.x, minX), maxX)
+        let limitedY = min(max(position.y, minY), maxY)
+
+        return CGPoint(x: limitedX, y: limitedY)
     }
 }
+
 
 
