@@ -25,7 +25,7 @@ struct ContentView: View {
             NavigationView {
                 ZStack {
                     KyudoTargetView()
-                        .navigationBarTitle("点数")
+                        .navigationBarTitle("\(arrowData.scores.reduce(0, +))点")
                         .navigationBarTitleDisplayMode(.inline)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .background(bodyColor)
@@ -132,21 +132,53 @@ struct HitMarkView: View {
 
                 ForEach(arrowData.positions.indices, id: \.self) { index in
                     let subtext = String(indexPosition[index])
+                    if index % 3 == 0 {
+                        Image("OomaeHitmark")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30)
+                            .position(x: arrowData.positions[index].x, y: arrowData.positions[index].y)
+                            .gesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged { value in
+                                        let newPosition = limitPosition(value.location, in: geometry.size)
+                                        arrowData.positions[index] = newPosition
+                                        arrowData.scores[index] = scoreFromPosition(arrowData.positions[index])
+                                        arrowData.scoresTexts[index] = scoreTextFromScore(arrowData.scores[index])
+                                    }
+                            )
+                    }else if index % 3 == 1 {
+                        Image("NakaHitmark")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30)
+                            .position(x: arrowData.positions[index].x, y: arrowData.positions[index].y)
+                            .gesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged { value in
+                                        let newPosition = limitPosition(value.location, in: geometry.size)
+                                        arrowData.positions[index] = newPosition
+                                        arrowData.scores[index] = scoreFromPosition(arrowData.positions[index])
+                                        arrowData.scoresTexts[index] = scoreTextFromScore(arrowData.scores[index])
+                                    }
+                            )
+                    }else{
+                        Image("OtiHitmark")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30)
+                            .position(x: arrowData.positions[index].x, y: arrowData.positions[index].y)
+                            .gesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged { value in
+                                        let newPosition = limitPosition(value.location, in: geometry.size)
+                                        arrowData.positions[index] = newPosition
+                                        arrowData.scores[index] = scoreFromPosition(arrowData.positions[index])
+                                        arrowData.scoresTexts[index] = scoreTextFromScore(arrowData.scores[index])
+                                    }
+                            )
+                    }
                     
-                    Image("OomaeHitmark")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 20, height: 20)
-                        .position(x: arrowData.positions[index].x, y: arrowData.positions[index].y)
-                        .gesture(
-                            DragGesture(minimumDistance: 0)
-                                .onChanged { value in
-                                    let newPosition = limitPosition(value.location, in: geometry.size)
-                                    arrowData.positions[index] = newPosition
-                                    arrowData.scores[index] = scoreFromPosition(arrowData.positions[index])
-                                    arrowData.scoresTexts[index] = scoreTextFromScore(arrowData.scores[index])
-                                }
-                        )
                     
                     Text(subtext)
                         .position(x: arrowData.positions[index].x + 10, y: arrowData.positions[index].y + 10)
@@ -158,7 +190,7 @@ struct HitMarkView: View {
                     HStack {
                         Spacer()
                         Button(action: {
-                            let newHitMarkPosition = CGPoint(x: geometry.size.width / 2, y: geometry.size.height * 0.7)
+                            let newHitMarkPosition = CGPoint(x: geometry.size.width * 0.9, y: geometry.size.height * 0.8)
                             if arrowData.positions.count < 12 {
                                 arrowData.positions.append(limitPosition(newHitMarkPosition, in: geometry.size))
                                 arrowData.scores.append(scoreFromPosition(newHitMarkPosition))
@@ -192,7 +224,9 @@ struct HitMarkView: View {
         let radius = diameter / 2
         
         let distance = sqrt(pow(position.x - center.x, 2) + pow(position.y - center.y, 2))
-
+        
+        // ここで受け取ったポジション(表示用)を微調整(得点計算用へ)
+        
         // 色ごとの半径閾値
         let yellowRadius = radius / 5
         let redRadius = radius * 2 / 5

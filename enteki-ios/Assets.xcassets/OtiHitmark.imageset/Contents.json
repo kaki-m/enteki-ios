@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "oti.svg",
+      "filename" : "oti.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "oti 1.svg",
+      "filename" : "oti 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "oti 2.svg",
+      "filename" : "oti 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
