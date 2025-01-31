@@ -14,9 +14,9 @@ struct ScoreBoard: View {
             let cellWidth = geometry.size.width / CGFloat(columns.count + 1) // セル幅を動的計算
             let cellHeight = geometry.size.height / CGFloat(rows.count + 2) // セル高さを動的計算
         
-            VStack(spacing: 2) {
+            VStack(spacing: 0) {
                 // ヘッダー
-                HStack(spacing: 2) {
+                HStack(spacing: 1) {
                     Text("")
                         .frame(width: cellWidth-20, height: cellHeight) // 左上の空白セル
                     
@@ -24,24 +24,25 @@ struct ScoreBoard: View {
                         Text(column)
                             .bold()
                             .frame(width: cellWidth-5, height: cellHeight)
-                            .background(Color.gray.opacity(0.3))
+                            .background(Color.gray.opacity(0.5))
                             .border(Color.black, width: 1)
                     }
                 }
 
                 // 本体
                 ForEach(0..<rows.count, id: \.self) { row in
-                    HStack(spacing: 2) {
+                    HStack(spacing: 1) {
                         Text(rows[row])
                             .bold()
                             .frame(width: cellWidth-20, height: cellHeight)
-                            .background(Color.gray.opacity(0.3))
+                            .background(Color.gray.opacity(0.5))
                             .border(Color.black, width: 1)
 
                         ForEach(0..<columns.count, id: \.self) { col in
                                 Text(scores[row][col])
                                     .frame(width: cellWidth-5, height: cellHeight)
-                                    .background(Color.white)
+                                    // 得点ごとの色に背景色を設定
+                                    .background(backgroundColor(for: row, col: col))
                                     .border(Color.black, width: 1)
                             }
                         }
@@ -49,7 +50,7 @@ struct ScoreBoard: View {
                 
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .padding()
+            .padding(EdgeInsets(top: 1, leading: 1, bottom: 1, trailing: 1))
             .onAppear(){
                 updateScores()
             }
@@ -108,4 +109,26 @@ struct ScoreBoard: View {
             ["-", "-", "-", "-"]
         ]
     }
+    func backgroundColor(for row: Int, col: Int) -> Color {
+        guard let score = Int(scores[row][col]) else { return Color.gray.opacity(0.3)}
+            
+        switch score {
+        case 0:
+            return Color.green.opacity(0.3)
+        case 3:
+            return Color.white.opacity(0.3)
+        case 5:
+            return Color.black.opacity(0.3)
+        case 7:
+            return Color.blue.opacity(0.3)
+        case 9:
+            return Color.red.opacity(0.3)
+        case 10:
+            return Color.yellow.opacity(0.3)
+        default:
+            return Color.gray.opacity(0.2)
+            }
+        }
+    
 }
+
