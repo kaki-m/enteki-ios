@@ -101,7 +101,8 @@ struct KyudoTargetView: View {
                     .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
                     .onAppear {
                         let rect = geometry.frame(in: .local)
-                        arrowData.targetCenterPosition = CGPoint(x: rect.midX, y: rect.midY)
+                        arrowData.targetCenterPosition = CGPoint(x: geometry.size.width / 2,
+                                                                 y: geometry.size.height / 2)
                     }
                 Circle()
                     .fill(Color.black)
@@ -115,9 +116,20 @@ struct KyudoTargetView: View {
                 Circle()
                     .fill(Color.yellow)
                     .frame(width: arrowData.targetDiameter / 5, height: arrowData.targetDiameter / 5)
+                Circle()
+                    .fill(RadialGradient(
+                        gradient: Gradient(colors: [Color.green, Color.blue]),
+                        center: .center,
+                        startRadius: 1,
+                        endRadius: 50
+                    ))
+                    .frame(width: arrowData.targetDiameter, height: arrowData.targetDiameter)
+                    .opacity(0.02)
+                    .position(arrowData.targetCenterPosition)
             }
             .background(Color.clear)
         }
+        
     }
 }
 
