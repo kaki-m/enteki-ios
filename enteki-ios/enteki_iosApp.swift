@@ -14,6 +14,11 @@ class ArrowData: ObservableObject {
     @Published var targetDiameter: CGFloat = 280 // 的のサイズ
     @Published var scores: [Int] = []
     @Published var scoresTexts: [String] = ["-","-","-","-","-","-","-","-","-","-","-","-"]
+    @Published var recoredDateTime: String = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd HH:mm:ss" // フォーマット指定
+        return formatter.string(from: Date()) // 現在の日時を文字列に変換
+    }()
 }
 
 

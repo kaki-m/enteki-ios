@@ -56,6 +56,9 @@ struct ScoreBoard: View {
             .onChange(of: arrowData.scores) {
                 updateScores()
             }
+            .onChange(of: arrowData.recoredDateTime){
+                resetScores()
+            }
         }
     }
     func updateScores() {
@@ -97,5 +100,12 @@ struct ScoreBoard: View {
         if scoreNum > 11 {
             scores[2][3] = "\(arrowData.scores[11])"
         }
+    }
+    func resetScores(){
+        scores = [
+            ["-", "-", "-", "-"],
+            ["-", "-", "-", "-"],
+            ["-", "-", "-", "-"]
+        ]
     }
 }

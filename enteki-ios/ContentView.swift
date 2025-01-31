@@ -26,6 +26,15 @@ struct ContentView: View {
                 ZStack {
                     KyudoTargetView()
                         .navigationBarTitle("\(arrowData.scores.reduce(0, +))点")
+                        .navigationBarItems(
+                                leading: Button(action: {
+                                    print("初期化ボタンが押されました") // ここに処理を追加
+                                    resetArrowData()
+                                }) {
+                                    Image(systemName: "arrow.uturn.backward") // ← SF Symbols のアイコン
+                                        .foregroundColor(.white)
+                                }
+                            )
                         .navigationBarTitleDisplayMode(.inline)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .background(bodyColor)
@@ -37,8 +46,19 @@ struct ContentView: View {
             .navigationViewStyle(StackNavigationViewStyle()) // iPad対応
             .background(bodyColor)
             .edgesIgnoringSafeArea(.all)
+            
             TabBarView()
         }
+    func resetArrowData(){
+        arrowData.positions = []
+        arrowData.scores = []
+        arrowData.scoresTexts = ["-","-","-","-","-","-","-","-","-","-","-","-"]
+        arrowData.recoredDateTime = {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy/MM/dd HH:mm:ss" // フォーマット指定
+            return formatter.string(from: Date()) // 現在の日時を文字列に変換
+        }()
+    }
     }
 
 
@@ -102,7 +122,7 @@ struct KyudoTargetView: View {
                     .onAppear {
                         let rect = geometry.frame(in: .local)
                         arrowData.targetCenterPosition = CGPoint(x: geometry.size.width / 2,
-                                                                 y: geometry.size.height / 2)
+                                                                y: geometry.size.height / 2)
                     }
                 Circle()
                     .fill(Color.black)
@@ -154,6 +174,7 @@ struct HitMarkView: View {
                                 DragGesture(minimumDistance: 0)
                                     .onChanged { value in
                                         let newPosition = limitPosition(value.location, in: geometry.size)
+                                        // print(index)
                                         arrowData.positions[index] = newPosition
                                         arrowData.scores[index] = scoreFromPosition(arrowData.positions[index])
                                         arrowData.scoresTexts[index] = scoreTextFromScore(arrowData.scores[index])
@@ -289,8 +310,6 @@ struct HitMarkView: View {
             return "green"
         }
     }
-
 }
-
 
 
