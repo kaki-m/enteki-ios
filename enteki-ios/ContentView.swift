@@ -145,7 +145,7 @@ struct HitMarkView: View {
                 ForEach(arrowData.positions.indices, id: \.self) { index in
                     let subtext = String(indexPosition[index])
                     if index % 3 == 0 {
-                        Image("OomaeHitmark")
+                        Image("Hitmark")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 30, height: 30)
@@ -159,8 +159,11 @@ struct HitMarkView: View {
                                         arrowData.scoresTexts[index] = scoreTextFromScore(arrowData.scores[index])
                                     }
                             )
+                        Text("前")
+                            .position(x: arrowData.positions[index].x+17, y:arrowData.positions[index].y-10 )
+                            .foregroundColor(.brown)
                     }else if index % 3 == 1 {
-                        Image("NakaHitmark")
+                        Image("Hitmark")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 30, height: 30)
@@ -169,13 +172,16 @@ struct HitMarkView: View {
                                 DragGesture(minimumDistance: 0)
                                     .onChanged { value in
                                         let newPosition = limitPosition(value.location, in: geometry.size)
-                                        arrowData.positions[index] = newPosition
+                                        arrowData.positions[index] = CGPoint(x: newPosition.x, y: newPosition.y)
                                         arrowData.scores[index] = scoreFromPosition(arrowData.positions[index])
                                         arrowData.scoresTexts[index] = scoreTextFromScore(arrowData.scores[index])
                                     }
                             )
+                        Text("中")
+                            .position(x: arrowData.positions[index].x+17, y:arrowData.positions[index].y-10 )
+                            .foregroundColor(.brown)
                     }else{
-                        Image("OtiHitmark")
+                        Image("Hitmark")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 30, height: 30)
@@ -189,11 +195,19 @@ struct HitMarkView: View {
                                         arrowData.scoresTexts[index] = scoreTextFromScore(arrowData.scores[index])
                                     }
                             )
+                        Text("落")
+                            .position(x: arrowData.positions[index].x+17, y:arrowData.positions[index].y-10)
+                            .foregroundColor(.brown)
                     }
+                    // 得点計算点の位置確認用
+                    Circle()
+                        .fill(Color.red)
+                        .frame(width: 5, height: 5)
+                        .position(arrowData.positions[index])
                     
                     
                     Text(subtext)
-                        .position(x: arrowData.positions[index].x + 10, y: arrowData.positions[index].y + 10)
+                        .position(x: arrowData.positions[index].x + 17, y: arrowData.positions[index].y + 10)
                         .foregroundColor(.brown)
                 }
 
