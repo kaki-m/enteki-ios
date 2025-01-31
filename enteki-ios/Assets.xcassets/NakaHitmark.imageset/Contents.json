@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "naka.svg",
+      "filename" : "naka.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "naka 1.svg",
+      "filename" : "naka 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "naka 2.svg",
+      "filename" : "naka 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

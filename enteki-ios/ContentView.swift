@@ -25,7 +25,7 @@ struct ContentView: View {
             NavigationView {
                 ZStack {
                     KyudoTargetView()
-                        .navigationBarTitle("点数")
+                        .navigationBarTitle("\(arrowData.scores.reduce(0, +))点")
                         .navigationBarTitleDisplayMode(.inline)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .background(bodyColor)
@@ -101,7 +101,8 @@ struct KyudoTargetView: View {
                     .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
                     .onAppear {
                         let rect = geometry.frame(in: .local)
-                        arrowData.targetCenterPosition = CGPoint(x: rect.midX, y: rect.midY)
+                        arrowData.targetCenterPosition = CGPoint(x: geometry.size.width / 2,
+                                                                 y: geometry.size.height / 2)
                     }
                 Circle()
                     .fill(Color.black)
@@ -115,9 +116,20 @@ struct KyudoTargetView: View {
                 Circle()
                     .fill(Color.yellow)
                     .frame(width: arrowData.targetDiameter / 5, height: arrowData.targetDiameter / 5)
+                Circle()
+                    .fill(RadialGradient(
+                        gradient: Gradient(colors: [Color.green, Color.blue]),
+                        center: .center,
+                        startRadius: 1,
+                        endRadius: 50
+                    ))
+                    .frame(width: arrowData.targetDiameter, height: arrowData.targetDiameter)
+                    .opacity(0.02)
+                    .position(arrowData.targetCenterPosition)
             }
             .background(Color.clear)
         }
+        
     }
 }
 
@@ -132,24 +144,70 @@ struct HitMarkView: View {
 
                 ForEach(arrowData.positions.indices, id: \.self) { index in
                     let subtext = String(indexPosition[index])
+                    if index % 3 == 0 {
+                        Image("Hitmark")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30)
+                            .position(x: arrowData.positions[index].x, y: arrowData.positions[index].y)
+                            .gesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged { value in
+                                        let newPosition = limitPosition(value.location, in: geometry.size)
+                                        arrowData.positions[index] = newPosition
+                                        arrowData.scores[index] = scoreFromPosition(arrowData.positions[index])
+                                        arrowData.scoresTexts[index] = scoreTextFromScore(arrowData.scores[index])
+                                    }
+                            )
+                        Text("前")
+                            .position(x: arrowData.positions[index].x+17, y:arrowData.positions[index].y-10 )
+                            .foregroundColor(.brown)
+                    }else if index % 3 == 1 {
+                        Image("Hitmark")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30)
+                            .position(x: arrowData.positions[index].x, y: arrowData.positions[index].y)
+                            .gesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged { value in
+                                        let newPosition = limitPosition(value.location, in: geometry.size)
+                                        arrowData.positions[index] = CGPoint(x: newPosition.x, y: newPosition.y)
+                                        arrowData.scores[index] = scoreFromPosition(arrowData.positions[index])
+                                        arrowData.scoresTexts[index] = scoreTextFromScore(arrowData.scores[index])
+                                    }
+                            )
+                        Text("中")
+                            .position(x: arrowData.positions[index].x+17, y:arrowData.positions[index].y-10 )
+                            .foregroundColor(.brown)
+                    }else{
+                        Image("Hitmark")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30)
+                            .position(x: arrowData.positions[index].x, y: arrowData.positions[index].y)
+                            .gesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged { value in
+                                        let newPosition = limitPosition(value.location, in: geometry.size)
+                                        arrowData.positions[index] = newPosition
+                                        arrowData.scores[index] = scoreFromPosition(arrowData.positions[index])
+                                        arrowData.scoresTexts[index] = scoreTextFromScore(arrowData.scores[index])
+                                    }
+                            )
+                        Text("落")
+                            .position(x: arrowData.positions[index].x+17, y:arrowData.positions[index].y-10)
+                            .foregroundColor(.brown)
+                    }
+                    // 得点計算点の位置確認用
+                    Circle()
+                        .fill(Color.red)
+                        .frame(width: 5, height: 5)
+                        .position(arrowData.positions[index])
                     
-                    Image("OomaeHitmark")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 20, height: 20)
-                        .position(x: arrowData.positions[index].x, y: arrowData.positions[index].y)
-                        .gesture(
-                            DragGesture(minimumDistance: 0)
-                                .onChanged { value in
-                                    let newPosition = limitPosition(value.location, in: geometry.size)
-                                    arrowData.positions[index] = newPosition
-                                    arrowData.scores[index] = scoreFromPosition(arrowData.positions[index])
-                                    arrowData.scoresTexts[index] = scoreTextFromScore(arrowData.scores[index])
-                                }
-                        )
                     
                     Text(subtext)
-                        .position(x: arrowData.positions[index].x + 10, y: arrowData.positions[index].y + 10)
+                        .position(x: arrowData.positions[index].x + 17, y: arrowData.positions[index].y + 10)
                         .foregroundColor(.brown)
                 }
 
@@ -158,7 +216,7 @@ struct HitMarkView: View {
                     HStack {
                         Spacer()
                         Button(action: {
-                            let newHitMarkPosition = CGPoint(x: geometry.size.width / 2, y: geometry.size.height * 0.7)
+                            let newHitMarkPosition = CGPoint(x: geometry.size.width * 0.9, y: geometry.size.height * 0.8)
                             if arrowData.positions.count < 12 {
                                 arrowData.positions.append(limitPosition(newHitMarkPosition, in: geometry.size))
                                 arrowData.scores.append(scoreFromPosition(newHitMarkPosition))
@@ -192,7 +250,9 @@ struct HitMarkView: View {
         let radius = diameter / 2
         
         let distance = sqrt(pow(position.x - center.x, 2) + pow(position.y - center.y, 2))
-
+        
+        // ここで受け取ったポジション(表示用)を微調整(得点計算用へ)
+        
         // 色ごとの半径閾値
         let yellowRadius = radius / 5
         let redRadius = radius * 2 / 5
