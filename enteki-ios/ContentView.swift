@@ -143,6 +143,8 @@ struct HitMarkView: View {
                                 .onChanged { value in
                                     let newPosition = limitPosition(value.location, in: geometry.size)
                                     arrowData.positions[index] = newPosition
+                                    arrowData.scores[index] = scoreFromPosition(arrowData.positions[index])
+                                    arrowData.scoresTexts[index] = scoreTextFromScore(arrowData.scores[index])
                                 }
                         )
                     
@@ -159,6 +161,7 @@ struct HitMarkView: View {
                             let newHitMarkPosition = CGPoint(x: geometry.size.width / 2, y: geometry.size.height * 0.7)
                             if arrowData.positions.count < 12 {
                                 arrowData.positions.append(limitPosition(newHitMarkPosition, in: geometry.size))
+                                arrowData.scores.append(scoreFromPosition(newHitMarkPosition))
                             }
                         }) {
                             Image(systemName: "plus.diamond")
@@ -182,6 +185,51 @@ struct HitMarkView: View {
 
         return CGPoint(x: limitedX, y: limitedY)
     }
+    
+    func scoreFromPosition(_ position: CGPoint) -> Int {
+        let center = arrowData.targetCenterPosition
+        let diameter = arrowData.targetDiameter
+        let radius = diameter / 2
+        
+        let distance = sqrt(pow(position.x - center.x, 2) + pow(position.y - center.y, 2))
+
+        // 色ごとの半径閾値
+        let yellowRadius = radius / 5
+        let redRadius = radius * 2 / 5
+        let blueRadius = radius * 3 / 5
+        let blackRadius = radius * 4 / 5
+
+        if distance <= yellowRadius {
+            return 10 // 黄色
+        } else if distance <= redRadius {
+            return 9 // 赤
+        } else if distance <= blueRadius {
+            return 7 // 青
+        } else if distance <= blackRadius {
+            return 5 // 黒
+        } else if distance <= radius {
+            return 3 // 白
+        } else {
+            return 0 // 的の外
+        }
+    }
+    func scoreTextFromScore(_ score: Int) -> String {
+        switch score {
+        case 10:
+            return "yellow"
+        case 9:
+            return "red"
+        case 7:
+            return "blue"
+        case 5:
+            return "black"
+        case 3:
+            return "white"
+        default:
+            return "green"
+        }
+    }
+
 }
 
 

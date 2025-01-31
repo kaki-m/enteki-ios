@@ -3,13 +3,12 @@ import SwiftUI
 struct ScoreBoard: View {
     let rows = ["大前", "中", "落ち"]
     let columns = ["1", "2", "3", "4"]
-
+    @EnvironmentObject var arrowData: ArrowData
     @State private var scores: [[String]] = [
-        ["10", "5", "-", "-"],
-        ["0", "7", "-", "-"],
-        ["8", "3", "-", "-"]
+        ["-", "-", "-", "-"],
+        ["-", "-", "-", "-"],
+        ["-", "-", "-", "-"]
     ]
-
     var body: some View {
         GeometryReader { geometry in
             let cellWidth = geometry.size.width / CGFloat(columns.count + 1) // セル幅を動的計算
@@ -51,6 +50,52 @@ struct ScoreBoard: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .padding()
+            .onAppear(){
+                updateScores()
+            }
+            .onChange(of: arrowData.scores) {
+                updateScores()
+            }
+        }
+    }
+    func updateScores() {
+        let scoreNum = arrowData.scores.count
+        guard !arrowData.scores.isEmpty else { return } // scores が空なら何もしない
+        if scoreNum > 0{
+            scores[0][0] = "\(arrowData.scores[0])"
+        }
+        if scoreNum > 3{
+            scores[0][1] = "\(arrowData.scores[3])"
+        }
+        if scoreNum > 6{
+            scores[0][2] = "\(arrowData.scores[6])"
+        }
+        if scoreNum > 9{
+            scores[0][3] = "\(arrowData.scores[9])"
+        }
+        if scoreNum > 1 {
+            scores[1][0] = "\(arrowData.scores[1])"
+        }
+        if scoreNum > 4 {
+            scores[1][1] = "\(arrowData.scores[4])"
+        }
+        if scoreNum > 7 {
+            scores[1][2] = "\(arrowData.scores[7])"
+        }
+        if scoreNum > 10 {
+            scores[1][3] = "\(arrowData.scores[10])"
+        }
+        if scoreNum > 2 {
+            scores[2][0] = "\(arrowData.scores[2])"
+        }
+        if scoreNum > 5 {
+            scores[2][1] = "\(arrowData.scores[5])"
+        }
+        if scoreNum > 8 {
+            scores[2][2] = "\(arrowData.scores[8])"
+        }
+        if scoreNum > 11 {
+            scores[2][3] = "\(arrowData.scores[11])"
         }
     }
 }
