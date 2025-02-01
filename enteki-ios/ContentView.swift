@@ -66,7 +66,6 @@ struct TabBarView: View {
     @EnvironmentObject var arrowData: ArrowData
 
     var body: some View {
-        let targetCenterPositionStr = "(\(arrowData.targetCenterPosition))"
         TabView {
             ScoreBoard()
                 .tabItem {
@@ -74,19 +73,18 @@ struct TabBarView: View {
                     Text("")
                 }
 
-            Text(targetCenterPositionStr)
+            Analysis()
                 .tabItem {
                     Image(systemName: "2.circle")
                     Text("Second")
                 }
-                .badge(5)
 
             Text("Third Tab")
                 .tabItem {
                     Image(systemName: "3.circle")
                     Text("Third")
                 }
-                .badge("New")
+                .badge("Not available")
         }
     }
 }
