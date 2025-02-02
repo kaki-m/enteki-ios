@@ -32,3 +32,8 @@ struct enteki_iosApp: App {
         }
     }
 }
+
+#Preview {
+    ContentView()
+        .environmentObject(ArrowData()) // 必要なら環境オブジェクトを渡す
+}
