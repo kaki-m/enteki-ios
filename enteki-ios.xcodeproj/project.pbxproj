@@ -20,6 +20,10 @@
 		608A6CE32D4F671F001574A0 /* ScoreGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608A6CE22D4F671F001574A0 /* ScoreGraph.swift */; };
 		608A6CE52D4F67C7001574A0 /* Analysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608A6CE42D4F67C2001574A0 /* Analysis.swift */; };
 		608A6CE72D4F75A2001574A0 /* ScoreRatioTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608A6CE62D4F75A2001574A0 /* ScoreRatioTable.swift */; };
+		608A6CEA2D4FA3C2001574A0 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608A6CE92D4FA3B9001574A0 /* DatabaseManager.swift */; };
+		608A6CEC2D4FA495001574A0 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 608A6CEB2D4FA495001574A0 /* SQLite */; };
+		608A6CEE2D4FA54B001574A0 /* ScoreRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608A6CED2D4FA547001574A0 /* ScoreRecord.swift */; };
+		608A6CF02D4FCED4001574A0 /* PastResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608A6CEF2D4FCECE001574A0 /* PastResults.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +59,9 @@
 		608A6CE22D4F671F001574A0 /* ScoreGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreGraph.swift; sourceTree = "<group>"; };
 		608A6CE42D4F67C2001574A0 /* Analysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analysis.swift; sourceTree = "<group>"; };
 		608A6CE62D4F75A2001574A0 /* ScoreRatioTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreRatioTable.swift; sourceTree = "<group>"; };
+		608A6CE92D4FA3B9001574A0 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
+		608A6CED2D4FA547001574A0 /* ScoreRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreRecord.swift; sourceTree = "<group>"; };
+		608A6CEF2D4FCECE001574A0 /* PastResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastResults.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				608A6CEC2D4FA495001574A0 /* SQLite in Frameworks */,
 				3F94209A2ACE6E6700EB178A /* SwiftSVG in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -110,7 +118,10 @@
 				3F6486322AC801DE008DAE00 /* ContentView.swift */,
 				602275032BC828400040AE06 /* ScoreBoard.swift */,
 				608A6CE22D4F671F001574A0 /* ScoreGraph.swift */,
+				608A6CED2D4FA547001574A0 /* ScoreRecord.swift */,
+				608A6CE92D4FA3B9001574A0 /* DatabaseManager.swift */,
 				608A6CE02D4F6697001574A0 /* HeatMap.swift */,
+				608A6CEF2D4FCECE001574A0 /* PastResults.swift */,
 				608A6CE42D4F67C2001574A0 /* Analysis.swift */,
 				608A6CE62D4F75A2001574A0 /* ScoreRatioTable.swift */,
 				3F6486342AC801E0008DAE00 /* Assets.xcassets */,
@@ -162,6 +173,7 @@
 			name = "enteki-ios";
 			packageProductDependencies = (
 				3F9420992ACE6E6700EB178A /* SwiftSVG */,
+				608A6CEB2D4FA495001574A0 /* SQLite */,
 			);
 			productName = "enteki-ios";
 			productReference = 3F64862D2AC801DE008DAE00 /* enteki-ios.app */;
@@ -237,6 +249,7 @@
 			mainGroup = 3F6486242AC801DE008DAE00;
 			packageReferences = (
 				3F9420982ACE6E6700EB178A /* XCRemoteSwiftPackageReference "SwiftSVG" */,
+				608A6CE82D4FA346001574A0 /* XCRemoteSwiftPackageReference "SQLite" */,
 			);
 			productRefGroup = 3F64862E2AC801DE008DAE00 /* Products */;
 			projectDirPath = "";
@@ -280,10 +293,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				608A6CEA2D4FA3C2001574A0 /* DatabaseManager.swift in Sources */,
 				608A6CE12D4F66AD001574A0 /* HeatMap.swift in Sources */,
+				608A6CEE2D4FA54B001574A0 /* ScoreRecord.swift in Sources */,
 				608A6CE52D4F67C7001574A0 /* Analysis.swift in Sources */,
 				608A6CE72D4F75A2001574A0 /* ScoreRatioTable.swift in Sources */,
 				608A6CE32D4F671F001574A0 /* ScoreGraph.swift in Sources */,
+				608A6CF02D4FCED4001574A0 /* PastResults.swift in Sources */,
 				602275042BC828400040AE06 /* ScoreBoard.swift in Sources */,
 				3F6486332AC801DE008DAE00 /* ContentView.swift in Sources */,
 				3F6486312AC801DE008DAE00 /* enteki_iosApp.swift in Sources */,
@@ -622,6 +638,14 @@
 				kind = branch;
 			};
 		};
+		608A6CE82D4FA346001574A0 /* XCRemoteSwiftPackageReference "SQLite" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stephencelis/SQLite.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.15.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -629,6 +653,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3F9420982ACE6E6700EB178A /* XCRemoteSwiftPackageReference "SwiftSVG" */;
 			productName = SwiftSVG;
+		};
+		608A6CEB2D4FA495001574A0 /* SQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 608A6CE82D4FA346001574A0 /* XCRemoteSwiftPackageReference "SQLite" */;
+			productName = SQLite;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

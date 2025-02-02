@@ -10,6 +10,9 @@ import SwiftSVG
 
 struct ContentView: View {
     @EnvironmentObject var arrowData: ArrowData // 環境オブジェクトとして受け取る
+    @State private var showEmptyMessage: Bool = false
+    @State private var showResetMessage: Bool = false
+    @State private var showSaveMessage: Bool = false
     init() {
             let appearance = UINavigationBarAppearance()
             appearance.configureWithOpaqueBackground()
@@ -29,18 +32,72 @@ struct ContentView: View {
                         .navigationBarItems(
                                 leading: Button(action: {
                                     print("初期化ボタンが押されました") // ここに処理を追加
-                                    resetArrowData()
+                                    resetArrowData(saved: false)
                                 }) {
                                     Image(systemName: "arrow.uturn.backward") // ← SF Symbols のアイコン
                                         .foregroundColor(.white)
-                                }
-                            )
+                                },
+                                trailing: Button(action: {  //結果保存ボタンfdjfkl；亞fjl；だf；あｄ
+                                    saveData()
+                                }){
+                                    Image(systemName: "square.and.arrow.down") // 保存アイコンを設定
+                                        .foregroundColor(.white)
+                                })
                         .navigationBarTitleDisplayMode(.inline)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .background(bodyColor)
                     
                     HitMarkView()
                         .background(Color.clear)
+                    // 🔹 ふわっと表示して消えるメッセージ
+                    if showEmptyMessage {
+                        Text("矢所がありません")
+                            .padding()
+                            .background(Color.black.opacity(0.7))
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                            .opacity(showEmptyMessage ? 1 : 0)
+                            .animation(.easeInOut(duration: 0.5), value: showEmptyMessage)
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    withAnimation {
+                                        showEmptyMessage = false
+                                    }
+                                }
+                            }
+                    }
+                    if showResetMessage {
+                        Text("矢所をリセットしました")
+                            .padding()
+                            .background(Color.black.opacity(0.7))
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                            .opacity(showResetMessage ? 1 : 0)
+                            .animation(.easeInOut(duration: 0.5), value: showResetMessage)
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    withAnimation {
+                                        showResetMessage = false
+                                    }
+                                }
+                            }
+                    }
+                    if showSaveMessage {
+                        Text("矢所を保存しました")
+                            .padding()
+                            .background(Color.black.opacity(0.7))
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                            .opacity(showSaveMessage ? 1 : 0)
+                            .animation(.easeInOut(duration: 0.5), value: showSaveMessage)
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    withAnimation {
+                                        showSaveMessage = false
+                                    }
+                                }
+                            }
+                    }
                 }
             }
             .navigationViewStyle(StackNavigationViewStyle()) // iPad対応
@@ -49,7 +106,12 @@ struct ContentView: View {
             
             TabBarView()
         }
-    func resetArrowData(){
+    func resetArrowData(saved: Bool){
+        if saved{
+            showSaveMessage = true
+        }else{
+            showResetMessage = true
+        }
         arrowData.positions = []
         arrowData.scores = []
         arrowData.scoresTexts = ["-","-","-","-","-","-","-","-","-","-","-","-"]
@@ -59,7 +121,40 @@ struct ContentView: View {
             return formatter.string(from: Date()) // 現在の日時を文字列に変換
         }()
     }
+    func saveData() {
+        do {
+            if arrowData.positions.isEmpty {
+                withAnimation {
+                    showEmptyMessage = true  // 🔹 エラーメッセージを表示
+                }
+                return
+            }
+            
+            let dateString = arrowData.recoredDateTime
+            let positionsString = try String(data: JSONEncoder().encode(arrowData.positions), encoding: .utf8) ?? ""
+            let scoreString = try String(data: JSONEncoder().encode(arrowData.scores), encoding: .utf8) ?? ""
+            let scoreTextsString = try String(data: JSONEncoder().encode(arrowData.scoresTexts), encoding: .utf8) ?? ""
+            let playerNamesString = try String(data: JSONEncoder().encode(arrowData.playerNames), encoding: .utf8) ?? ""
+            let targetCenterPositionString = "(\(arrowData.targetCenterPosition.x), \(arrowData.targetCenterPosition.y))"
+            let targetDiameterString = "\(arrowData.targetDiameter)"
+            
+            DatabaseManager.shared.insertScoreRecord(
+                date: dateString,
+                positionData: positionsString,
+                score: scoreString,
+                targetCenterPosition: targetCenterPositionString,
+                targetDiameter: targetDiameterString,
+                scoreText: scoreTextsString,
+                playerNames: playerNamesString
+            )
+            
+            print("データ保存完了！")
+        } catch {
+            print("JSONエンコードに失敗しました: \(error)")
+        }
+        resetArrowData(saved: true)
     }
+}
 
 
 struct TabBarView: View {
@@ -70,22 +165,22 @@ struct TabBarView: View {
             ScoreBoard()
                 .tabItem {
                     Image(systemName: "1.circle")
-                    Text("")
+                    Text("得点版")
                 }
 
             Analysis()
                 .tabItem {
                     Image(systemName: "2.circle")
-                    Text("Second")
+                    Text("分析")
                 }
 
-            Text("Third Tab")
+            PastResults()
                 .tabItem {
                     Image(systemName: "3.circle")
-                    Text("Third")
+                    Text("過去データ")
                 }
-                .badge("Not available")
         }
+        
     }
 }
 
@@ -307,6 +402,5 @@ struct HitMarkView: View {
             return "green"
         }
     }
+    
 }
-
-
