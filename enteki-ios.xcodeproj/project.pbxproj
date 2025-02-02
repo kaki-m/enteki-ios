@@ -19,6 +19,7 @@
 		608A6CE12D4F66AD001574A0 /* HeatMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608A6CE02D4F6697001574A0 /* HeatMap.swift */; };
 		608A6CE32D4F671F001574A0 /* ScoreGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608A6CE22D4F671F001574A0 /* ScoreGraph.swift */; };
 		608A6CE52D4F67C7001574A0 /* Analysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608A6CE42D4F67C2001574A0 /* Analysis.swift */; };
+		608A6CE72D4F75A2001574A0 /* ScoreRatioTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608A6CE62D4F75A2001574A0 /* ScoreRatioTable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		608A6CE02D4F6697001574A0 /* HeatMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatMap.swift; sourceTree = "<group>"; };
 		608A6CE22D4F671F001574A0 /* ScoreGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreGraph.swift; sourceTree = "<group>"; };
 		608A6CE42D4F67C2001574A0 /* Analysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analysis.swift; sourceTree = "<group>"; };
+		608A6CE62D4F75A2001574A0 /* ScoreRatioTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreRatioTable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +112,7 @@
 				608A6CE22D4F671F001574A0 /* ScoreGraph.swift */,
 				608A6CE02D4F6697001574A0 /* HeatMap.swift */,
 				608A6CE42D4F67C2001574A0 /* Analysis.swift */,
+				608A6CE62D4F75A2001574A0 /* ScoreRatioTable.swift */,
 				3F6486342AC801E0008DAE00 /* Assets.xcassets */,
 				3F6486362AC801E0008DAE00 /* Preview Content */,
 			);
@@ -279,6 +282,7 @@
 			files = (
 				608A6CE12D4F66AD001574A0 /* HeatMap.swift in Sources */,
 				608A6CE52D4F67C7001574A0 /* Analysis.swift in Sources */,
+				608A6CE72D4F75A2001574A0 /* ScoreRatioTable.swift in Sources */,
 				608A6CE32D4F671F001574A0 /* ScoreGraph.swift in Sources */,
 				602275042BC828400040AE06 /* ScoreBoard.swift in Sources */,
 				3F6486332AC801DE008DAE00 /* ContentView.swift in Sources */,

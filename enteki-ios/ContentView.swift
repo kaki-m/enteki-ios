@@ -118,7 +118,6 @@ struct KyudoTargetView: View {
                     )
                     .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
                     .onAppear {
-                        let rect = geometry.frame(in: .local)
                         arrowData.targetCenterPosition = CGPoint(x: geometry.size.width / 2,
                                                                 y: geometry.size.height / 2)
                     }
