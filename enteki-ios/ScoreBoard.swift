@@ -32,7 +32,7 @@ struct ScoreBoard: View {
                 // 本体
                 ForEach(0..<rows.count, id: \.self) { row in
                     HStack(spacing: 1) {
-                        Text(rows[row])
+                        TextField(rows[row], text: $arrowData.playerNames[row])
                             .bold()
                             .frame(width: cellWidth-20, height: cellHeight)
                             .background(Color.gray.opacity(0.5))

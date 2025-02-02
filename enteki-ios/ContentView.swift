@@ -35,14 +35,35 @@ struct ContentView: View {
                                         .foregroundColor(.white)
                                 },
                                 trailing: Button(action: {
-                                    let formatter = DateFormatter()
-                                    formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
-                                    let dateString = formatter.string(from: Date())
+                                    do {
+                                        let dateString: String = arrowData.recoredDateTime
+                                        
+                                        let positionsData = try JSONEncoder().encode(arrowData.positions)
+                                        let scoreData = try JSONEncoder().encode(arrowData.scores)
+                                        let scoreTextsData = try JSONEncoder().encode(arrowData.scoresTexts)
+                                        let playerNamesData = try JSONEncoder().encode(arrowData.playerNames)
 
-                                    let jsonData = try? JSONSerialization.data(withJSONObject: arrowData.positions.map { ["x": $0.x, "y": $0.y] }, options: [])
-                                    let jsonString = String(data: jsonData!, encoding: .utf8) ?? "{}"
+                                        let positionsString: String = String(data: positionsData, encoding: .utf8) ?? ""
+                                        let scoreString: String = String(data: scoreData, encoding: .utf8) ?? ""
+                                        let scoreTextsString: String = String(data: scoreTextsData, encoding: .utf8) ?? ""
+                                        let playerNamesString: String = String(data: playerNamesData, encoding: .utf8) ?? ""
 
-                                    DatabaseManager.shared.insertScoreRecord(date: dateString, positionData: jsonString, score: arrowData.scores.reduce(0, +))
+                                        let targetCenterPositionString = "(\(arrowData.targetCenterPosition.x), \(arrowData.targetCenterPosition.y))"
+                                        let targetDiameterString = "\(arrowData.targetDiameter)"
+                                        
+                                        DatabaseManager.shared.insertScoreRecord(
+                                            date: dateString,
+                                            positionData: positionsString,
+                                            score: scoreString,
+                                            targetCenterPosition: targetCenterPositionString,
+                                            targetDiameter: targetDiameterString,
+                                            scoreText: scoreTextsString,
+                                            playerNames: playerNamesString
+                                        )
+
+                                    } catch {
+                                        print("JSONエンコードに失敗しました: \(error)")
+                                    }
 
                                     print("データ保存完了！")
                                 }){
@@ -93,7 +114,7 @@ struct TabBarView: View {
                     Text("分析")
                 }
 
-            Text("Third Tab")
+            PastResults()
                 .tabItem {
                     Image(systemName: "3.circle")
                     Text("過去データ")
@@ -321,5 +342,3 @@ struct HitMarkView: View {
         }
     }
 }
-
-

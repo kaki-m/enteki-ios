@@ -23,6 +23,7 @@
 		608A6CEA2D4FA3C2001574A0 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608A6CE92D4FA3B9001574A0 /* DatabaseManager.swift */; };
 		608A6CEC2D4FA495001574A0 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 608A6CEB2D4FA495001574A0 /* SQLite */; };
 		608A6CEE2D4FA54B001574A0 /* ScoreRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608A6CED2D4FA547001574A0 /* ScoreRecord.swift */; };
+		608A6CF02D4FCED4001574A0 /* PastResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608A6CEF2D4FCECE001574A0 /* PastResults.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,7 @@
 		608A6CE62D4F75A2001574A0 /* ScoreRatioTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreRatioTable.swift; sourceTree = "<group>"; };
 		608A6CE92D4FA3B9001574A0 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		608A6CED2D4FA547001574A0 /* ScoreRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreRecord.swift; sourceTree = "<group>"; };
+		608A6CEF2D4FCECE001574A0 /* PastResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastResults.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +121,7 @@
 				608A6CED2D4FA547001574A0 /* ScoreRecord.swift */,
 				608A6CE92D4FA3B9001574A0 /* DatabaseManager.swift */,
 				608A6CE02D4F6697001574A0 /* HeatMap.swift */,
+				608A6CEF2D4FCECE001574A0 /* PastResults.swift */,
 				608A6CE42D4F67C2001574A0 /* Analysis.swift */,
 				608A6CE62D4F75A2001574A0 /* ScoreRatioTable.swift */,
 				3F6486342AC801E0008DAE00 /* Assets.xcassets */,
@@ -296,6 +299,7 @@
 				608A6CE52D4F67C7001574A0 /* Analysis.swift in Sources */,
 				608A6CE72D4F75A2001574A0 /* ScoreRatioTable.swift in Sources */,
 				608A6CE32D4F671F001574A0 /* ScoreGraph.swift in Sources */,
+				608A6CF02D4FCED4001574A0 /* PastResults.swift in Sources */,
 				602275042BC828400040AE06 /* ScoreBoard.swift in Sources */,
 				3F6486332AC801DE008DAE00 /* ContentView.swift in Sources */,
 				3F6486312AC801DE008DAE00 /* enteki_iosApp.swift in Sources */,
