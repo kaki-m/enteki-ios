@@ -11,13 +11,19 @@ struct Analysis: View {
     @EnvironmentObject var arrowData: ArrowData
     
     var body: some View {
-        VStack {
-            ScoreGraph()
-            HStack {
-                HeatMap()
-                Text("表")
+        GeometryReader { geometry in
+            let width = geometry.size.width  // **左半分にフィット**
+            VStack {
+                ScoreGraph()
+                ZStack {
+                    HeatMap()
+                        .frame(maxWidth: .infinity)
+                    Spacer()
+                    ScoreRatioTable()
+                        .frame(width:width/2)
+                        .position(x: width*0.7)
+                }
             }
         }
-        
     }
 }
