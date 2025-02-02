@@ -4,8 +4,30 @@ import SQLite
 class DatabaseManager {
     static let shared = DatabaseManager()
     private var db: Connection?
+    let scores = Table("scores")
+    let id = SQLite.Expression<Int64>("id")
+    let date = SQLite.Expression<String>("date")
+    let positionData = SQLite.Expression<String>("positionData")
+    let score = SQLite.Expression<String>("score")
+    let targetCenterPosition = SQLite.Expression<String>("targetCenterPosition")
+    let targetDiameter = SQLite.Expression<String>("targetDiameter")
+    let scoreText = SQLite.Expression<String>("scoresText")
+    let playerNames = SQLite.Expression<String>("playerNames")
 
     private init() {
+        // デバッグでデータベースを初期化する>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        do {
+            let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+            let dbPath = documentDirectory.appendingPathComponent("score_database.sqlite3").path
+
+            // データベースファイルを削除
+            try FileManager.default.removeItem(atPath: dbPath)
+            print("データベースを削除しました")
+
+        } catch {
+            print("データベースの削除に失敗しました: \(error)")
+        }
+        //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ここまで
         do {
             let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
             let dbPath = documentDirectory.appendingPathComponent("score_database.sqlite3").path
@@ -15,30 +37,26 @@ class DatabaseManager {
         } catch {
             print("データベースの初期化に失敗しました: \(error)")
         }
+        
     }
 
     private func createTable() {
         do {
-            let scores = Table("scores")
-            let id = SQLite.Expression<Int64>("id")
-            let date = SQLite.Expression<String>("date")
-            let positionData = SQLite.Expression<String>("arrowPositions")
-            let score = SQLite.Expression<String>("scores")
-            let targetCenterPosition = SQLite.Expression<String>("targetCenterPosition")
-            let targetDiameter = SQLite.Expression<String>("targetDiameter")
-            let scoreText = SQLite.Expression<String>("scoresText")
-            let playerNames = SQLite.Expression<String>("playerNames")
-            
             try db?.run(scores.create(ifNotExists: true) { t in
                 t.column(id, primaryKey: .autoincrement)
                 t.column(date)
                 t.column(positionData)
-                t.column(score)
+                t.column(score, defaultValue: "")
                 t.column(targetCenterPosition)
                 t.column(targetDiameter)
                 t.column(scoreText)
                 t.column(playerNames)
             })
+            do {
+                try db?.run("UPDATE scores SET score = '' WHERE score IS NULL")
+            } catch {
+                print("NULL 値の修正に失敗しました: \(error)")
+            }
         } catch {
             print("テーブル作成に失敗しました: \(error)")
         }
@@ -54,7 +72,6 @@ class DatabaseManager {
             let targetDiameterColumn = SQLite.Expression<String>("targetDiameter")
             let scoreTextColumn = SQLite.Expression<String>("scoresText")
             let playerNamesColumn = SQLite.Expression<String>("playerNames")
-            
 
             let insert = scores.insert(
                 dateColumn <- date,
@@ -73,4 +90,27 @@ class DatabaseManager {
             print("スコアの保存に失敗しました: \(error)")
         }
     }
+    func fetchRecordsSummury() -> [(date: String, score: String, playerNames: String)] {
+        var records: [(date: String, score: String, playerNames: String)] = []
+
+        do {
+            let scores = Table("scores")
+            let dateColumn = SQLite.Expression<String>("date")
+            let scoreColumn = SQLite.Expression<String>("score")
+            let playerNamesColumn = SQLite.Expression<String>("playerNames")
+
+            for record in try db!.prepare(scores) {
+                let date = record[dateColumn]
+                let score = (try? record.get(scoreColumn)) ?? ""
+                let playerNames = record[playerNamesColumn]
+
+                records.append((date, score, playerNames))
+            }
+        } catch {
+            print("データ取得に失敗しました: \(error)")
+        }
+        
+        return records
+    }
+
 }
