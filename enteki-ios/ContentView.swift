@@ -33,8 +33,22 @@ struct ContentView: View {
                                 }) {
                                     Image(systemName: "arrow.uturn.backward") // ← SF Symbols のアイコン
                                         .foregroundColor(.white)
-                                }
-                            )
+                                },
+                                trailing: Button(action: {
+                                    let formatter = DateFormatter()
+                                    formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
+                                    let dateString = formatter.string(from: Date())
+
+                                    let jsonData = try? JSONSerialization.data(withJSONObject: arrowData.positions.map { ["x": $0.x, "y": $0.y] }, options: [])
+                                    let jsonString = String(data: jsonData!, encoding: .utf8) ?? "{}"
+
+                                    DatabaseManager.shared.insertScoreRecord(date: dateString, positionData: jsonString, score: arrowData.scores.reduce(0, +))
+
+                                    print("データ保存完了！")
+                                }){
+                                    Image(systemName: "square.and.arrow.down") // 💾 保存アイコンを設定
+                                        .foregroundColor(.white)
+                                })
                         .navigationBarTitleDisplayMode(.inline)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .background(bodyColor)
@@ -70,21 +84,20 @@ struct TabBarView: View {
             ScoreBoard()
                 .tabItem {
                     Image(systemName: "1.circle")
-                    Text("")
+                    Text("得点版")
                 }
 
             Analysis()
                 .tabItem {
                     Image(systemName: "2.circle")
-                    Text("Second")
+                    Text("分析")
                 }
 
             Text("Third Tab")
                 .tabItem {
                     Image(systemName: "3.circle")
-                    Text("Third")
+                    Text("過去データ")
                 }
-                .badge("Not available")
         }
     }
 }
