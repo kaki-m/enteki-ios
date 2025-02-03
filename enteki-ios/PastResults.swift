@@ -1,8 +1,10 @@
 import SwiftUI
 
 struct PastResults: View {
-    @State private var records: [(date: String, score: String, playerNames: String)] = []
+    @EnvironmentObject var arrowData: ArrowData // 環境オブジェクトとして受け取る
+    @State private var records: [(id: Int, date: String, score: String, playerNames: String)] = []
     @State private var dataExist: Bool = false // `@State` に変更
+    @State private var showLoadMessage: Bool = false
 
     var body: some View {
         VStack {
@@ -16,6 +18,17 @@ struct PastResults: View {
                         Text("\(playerNamesArray[0]), \(playerNamesArray[1]),  \(playerNamesArray[2])")
                     }
                     .padding()
+                    .onTapGesture{
+                        showLoadMessage = true
+                        let pastResult = DatabaseManager.shared.fetchRecordById(id: record.id)!
+                        arrowData.recoredDateTime = pastResult.date
+                        arrowData.scores = (try? JSONDecoder().decode([Int].self, from: pastResult.score.data(using: .utf8)!)) ?? []
+                        arrowData.playerNames = (try? JSONDecoder().decode([String].self, from: pastResult.playerNames.data(using: .utf8)!)) ?? []
+                        arrowData.targetCenterPosition = (try? JSONDecoder().decode(CGPoint.self, from: pastResult.targetCenterPosition.data(using: .utf8)!)) ?? CGPoint(x:0,y:0)
+                        arrowData.targetDiameter = (try? JSONDecoder().decode(CGFloat.self, from: pastResult.targetDiameter.data(using: .utf8)!)) ?? CGFloat(0)
+                        arrowData.scoresTexts = (try? JSONDecoder().decode([String].self, from: pastResult.scoreText.data(using: .utf8)!)) ?? []
+                        arrowData.positions = (try? JSONDecoder().decode([CGPoint].self, from: pastResult.positionData.data(using: .utf8)!)) ?? []
+                    }
                 }
             } else {
                 Text("データがありません")
