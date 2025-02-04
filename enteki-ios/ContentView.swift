@@ -23,9 +23,9 @@ struct ContentView: View {
             UINavigationBar.appearance().scrollEdgeAppearance = appearance
         }
     var body: some View {
-        var color = colorByEnv(envColor:arrowData.targetBackgroundColor)
-        var navigationColor = Color(uiColor: color)
-        var bodyColor = Color(navigationColor.opacity(0.3))
+        let color = colorByEnv(envColor:arrowData.targetBackgroundColor)
+        let navigationColor = Color(uiColor: color)
+        let bodyColor = Color(navigationColor.opacity(0.3))
         let topBarDate = formatDateTime(arrowData.recoredDateTime)
             
             NavigationView {
@@ -260,28 +260,23 @@ struct KyudoTargetView: View {
                         arrowData.targetCenterPosition = CGPoint(x: geometry.size.width / 2,
                                                                 y: geometry.size.height / 2)
                     }
+                    .opacity(0.9)
                 Circle()
                     .fill(Color.black)
                     .frame(width: (arrowData.targetDiameter / 5) * 4, height: (arrowData.targetDiameter / 5) * 4)
+                    .opacity(0.9)
                 Circle()
                     .fill(Color.blue)
                     .frame(width: (arrowData.targetDiameter / 5) * 3, height: (arrowData.targetDiameter / 5) * 3)
+                    .opacity(0.9)
                 Circle()
                     .fill(Color.red)
                     .frame(width: (arrowData.targetDiameter / 5) * 2, height: (arrowData.targetDiameter / 5) * 2)
+                    .opacity(0.9)
                 Circle()
                     .fill(Color.yellow)
                     .frame(width: arrowData.targetDiameter / 5, height: arrowData.targetDiameter / 5)
-                Circle()
-                    .fill(RadialGradient(
-                        gradient: Gradient(colors: [Color.green, Color.blue]),
-                        center: .center,
-                        startRadius: 1,
-                        endRadius: 50
-                    ))
-                    .frame(width: arrowData.targetDiameter, height: arrowData.targetDiameter)
-                    .opacity(0.02)
-                    .position(arrowData.targetCenterPosition)
+                    .opacity(0.9)
             }
             .background(Color.clear)
         }
@@ -406,7 +401,7 @@ struct HitMarkView: View {
         let diameter = arrowData.targetDiameter
         let radius = diameter / 2
         
-        let distance = sqrt(pow(position.x - center.x, 2) + pow(position.y - center.y, 2))
+        let distance = sqrt(pow(position.x - center.x, 2) + pow(position.y - (center.y+26), 2)) //なぜか上にずれるから手を加えた
         
         // ここで受け取ったポジション(表示用)を微調整(得点計算用へ)
         
