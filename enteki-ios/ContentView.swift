@@ -31,7 +31,6 @@ struct ContentView: View {
             NavigationView {
                 ZStack {
                     KyudoTargetView()
-                        .navigationBarTitle("\(topBarDate)   \(arrowData.scores.reduce(0, +))点")
                         .navigationBarItems(
                                 leading: Button(action: {
                                     print("初期化ボタンが押されました") // ここに処理を追加
@@ -51,6 +50,23 @@ struct ContentView: View {
                         .toolbarBackground(.visible, for: .navigationBar)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .background(bodyColor)
+                        .toolbar {
+                            ToolbarItem(placement: .principal) {
+                                ZStack {
+                                            Text("\(arrowData.scores.reduce(0, +))点")
+                                                .font(.system(size: 24, weight: .bold))
+
+                                            HStack {
+                                                Spacer()
+                                                Text(topBarDate)
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.black)
+                                                    .padding(.trailing, 10) // 右側の余白を調整
+                                            }
+                                        }
+                                        .frame(maxWidth: .infinity, alignment: .center) // 中央配置
+                            }
+                        }
                     
                     HitMarkView()
                         .background(Color.clear)
@@ -111,6 +127,11 @@ struct ContentView: View {
             
             TabBarView()
         }
+        
+    func hideKeyboard() {
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        }
+        
     func resetArrowData(saved: Bool){
         if saved{
             showSaveMessage = true

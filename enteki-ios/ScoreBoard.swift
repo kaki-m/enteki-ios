@@ -32,19 +32,29 @@ struct ScoreBoard: View {
                 // 本体
                 ForEach(0..<rows.count, id: \.self) { row in
                     HStack(spacing: 1) {
-                        TextField(rows[row], text: $arrowData.playerNames[row])
-                            .bold()
-                            .frame(width: cellWidth-20, height: cellHeight+8)
-                            .background(Color.gray.opacity(0.5))
-                            .border(Color.black, width: 1)
-                            .cornerRadius(3)
+                        ZStack(alignment: .trailing) { // 右寄せ配置
+                            TextField(rows[row], text: $arrowData.playerNames[row])
+                                .bold()
+                                .padding(.leading, 5) // 文字の開始位置をボーダーの右にずらす
+                                .frame(width: cellWidth - 20, height: cellHeight + 8)
+                                .background(Color.gray.opacity(0.5))
+                                .border(Color.black, width: 2)
+                                .cornerRadius(3)
+                                .disableAutocorrection(true)
+                            
+                            Image(systemName: "pencil") // 鉛筆アイコン
+                                .foregroundColor(.gray)  // 色
+                                .padding(.trailing, 5)   // 右端の余白
+                                .padding(.bottom, 15)     // 下端の余白（位置調整）
+                        }
+                            
 
                         ForEach(0..<columns.count, id: \.self) { col in
                                 Text(scores[row][col])
                                     .frame(width: cellWidth-5, height: cellHeight+8)
                                     // 得点ごとの色に背景色を設定
                                     .background(backgroundColor(for: row, col: col))
-                                    .border(Color.black, width: 1)
+                                    .border(Color.black, width: 2)
                                     .cornerRadius(3)
                             }
                         }
@@ -53,9 +63,11 @@ struct ScoreBoard: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
                 TextField("メモ欄", text: $arrowData.memo)
+                    .padding(.leading, 5)
                     .frame(width:viewWidth*0.9, height: 40)
-                    .border(Color.black, width: 1)
+                    .border(Color.black, width: 2)
                     .cornerRadius(5)
+                    
             }
             .padding(EdgeInsets(top: 1, leading: 1, bottom: 1, trailing: 1))
             .onAppear(){
@@ -67,6 +79,12 @@ struct ScoreBoard: View {
             .onChange(of: arrowData.recoredDateTime){
                 resetScores()
             }
+            .onTapGesture {
+                    hideKeyboard()
+            }
+            .simultaneousGesture(TapGesture().onEnded {
+                hideKeyboard()
+            })
         }
         
     }
@@ -136,6 +154,9 @@ struct ScoreBoard: View {
         default:
             return Color.gray.opacity(0.05)
             }
+        }
+    func hideKeyboard() {
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
         }
     
 }
