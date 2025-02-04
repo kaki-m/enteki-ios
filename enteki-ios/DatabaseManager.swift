@@ -62,9 +62,10 @@ class DatabaseManager {
         }
     }
 
-    func insertScoreRecord(date: String, positionData: String, score: String, targetCenterPosition: String, targetDiameter: String, scoreText: String, playerNames: String) {
+    func insertScoreRecord(id: Int? = nil, date: String, positionData: String, score: String, targetCenterPosition: String, targetDiameter: String, scoreText: String, playerNames: String) {
         do {
             let scores = Table("scores")
+            let idColumn = SQLite.Expression<Int64>("id")
             let dateColumn = SQLite.Expression<String>("date")
             let positionDataColumn = SQLite.Expression<String>("positionData")
             let scoreColumn = SQLite.Expression<String>("score")
@@ -73,21 +74,39 @@ class DatabaseManager {
             let scoreTextColumn = SQLite.Expression<String>("scoreText")
             let playerNamesColumn = SQLite.Expression<String>("playerNames")
 
-            let insert = scores.insert(
-                dateColumn <- date,
-                positionDataColumn <- positionData,
-                scoreColumn <- score,
-                targetCenterPositionColumn <- targetCenterPosition,
-                targetDiameterColumn <- targetDiameter,
-                scoreTextColumn <- scoreText,
-                playerNamesColumn <- playerNames
-            )
+            if let id = id {
+                // 既存のIDがある場合はUPSERT (idを指定して更新or挿入)
+                let insert = scores.insert(or: .replace,
+                    idColumn <- Int64(id),
+                    dateColumn <- date,
+                    positionDataColumn <- positionData,
+                    scoreColumn <- score,
+                    targetCenterPositionColumn <- targetCenterPosition,
+                    targetDiameterColumn <- targetDiameter,
+                    scoreTextColumn <- scoreText,
+                    playerNamesColumn <- playerNames
+                )
 
-            try db?.run(insert)
+                try db?.run(insert)
+                print("スコア（id:\(id)）がデータベースに保存（または更新）されました")
+            } else {
+                // idが指定されていない場合は通常のinsert (idは自動生成)
+                let insert = scores.insert(
+                    dateColumn <- date,
+                    positionDataColumn <- positionData,
+                    scoreColumn <- score,
+                    targetCenterPositionColumn <- targetCenterPosition,
+                    targetDiameterColumn <- targetDiameter,
+                    scoreTextColumn <- scoreText,
+                    playerNamesColumn <- playerNames
+                )
 
-            print("スコアがデータベースに保存されました")
+                let insertedId = try db?.run(insert)
+                print("新しいスコアがデータベースに保存されました（id: \(insertedId ?? -1)）")
+            }
+
         } catch {
-            print("スコアの保存に失敗しました: \(error)")
+            print("スコアの保存（または更新）に失敗しました: \(error)")
         }
     }
     func fetchRecordsSummury() -> [(id: Int, date: String, score: String, playerNames: String)] {

@@ -117,6 +117,7 @@ struct ContentView: View {
         }else{
             showResetMessage = true
         }
+        arrowData.pastResultId = -1
         arrowData.positions = []
         arrowData.scores = []
         arrowData.scoresTexts = ["-","-","-","-","-","-","-","-","-","-","-","-"]
@@ -143,16 +144,29 @@ struct ContentView: View {
             let playerNamesString = try String(data: JSONEncoder().encode(arrowData.playerNames), encoding: .utf8) ?? ""
             let targetCenterPositionString = "(\(arrowData.targetCenterPosition.x), \(arrowData.targetCenterPosition.y))"
             let targetDiameterString = "\(arrowData.targetDiameter)"
+            if arrowData.targetBackgroundColor == "green" { // 背景がグリーンなら新規追加だからid指定せずに自動生成
+                DatabaseManager.shared.insertScoreRecord(
+                    date: dateString,
+                    positionData: positionsString,
+                    score: scoreString,
+                    targetCenterPosition: targetCenterPositionString,
+                    targetDiameter: targetDiameterString,
+                    scoreText: scoreTextsString,
+                    playerNames: playerNamesString
+                )
+            }else if arrowData.targetBackgroundColor == "bule" {
+                DatabaseManager.shared.insertScoreRecord(
+                    id: arrowData.pastResultId,
+                    date: dateString,
+                    positionData: positionsString,
+                    score: scoreString,
+                    targetCenterPosition: targetCenterPositionString,
+                    targetDiameter: targetDiameterString,
+                    scoreText: scoreTextsString,
+                    playerNames: playerNamesString
+                )
+            }
             
-            DatabaseManager.shared.insertScoreRecord(
-                date: dateString,
-                positionData: positionsString,
-                score: scoreString,
-                targetCenterPosition: targetCenterPositionString,
-                targetDiameter: targetDiameterString,
-                scoreText: scoreTextsString,
-                playerNames: playerNamesString
-            )
             
             print("データ保存完了！")
         } catch {
