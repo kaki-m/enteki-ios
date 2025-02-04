@@ -8,12 +8,12 @@ struct ScoreRatioTable: View {
         GeometryReader { geometry in
             let width = geometry.size.width * 0.5  // **左半分にフィット**
             let hitRatios: [Double] = getHitRatio(scores: arrowData.scores)
-            let scoreRatios: [Double] = getScoreRatio(scores: arrowData.scores)
+            let scoreRatios: [Int] = getPlayersScore(scores: arrowData.scores)
             VStack(spacing: 5) { // 行間の間隔を調整
                 HStack {
                     Text("　　")
                     Text("的中率")
-                    Text("得点率")
+                    Text("得点")
                 }
                 .font(.headline)
                 .padding(.bottom, 5)
@@ -29,7 +29,7 @@ struct ScoreRatioTable: View {
                     Spacer()
                     Text("\(String(format: "%.0f", hitRatios[0]))%")
                     Spacer()
-                    Text("\(String(format: "%.0f", scoreRatios[0]))%")
+                    Text("\(scoreRatios[0])点")
                 }
                 
                 HStack {
@@ -37,7 +37,7 @@ struct ScoreRatioTable: View {
                     Spacer()
                     Text("\(String(format: "%.0f", hitRatios[1]))%")
                     Spacer()
-                    Text("\(String(format: "%.0f", scoreRatios[1]))%")
+                    Text("\(scoreRatios[1])点")
                 }
                 
                 HStack {
@@ -45,7 +45,7 @@ struct ScoreRatioTable: View {
                     Spacer()
                     Text("\(String(format: "%.0f", hitRatios[2]))%")
                     Spacer()
-                    Text("\(String(format: "%.0f", scoreRatios[2]))%")
+                    Text("\(scoreRatios[2])点")
                 }
             }
             .position(x:width)
@@ -108,5 +108,28 @@ struct ScoreRatioTable: View {
         hitRatios[2] = Double(otiHitCount)/Double(otiCount)*100
         
         return hitRatios
+    }
+    func getPlayersScore(scores: [Int]) -> [Int] {
+        var playersScore: [Int] = [0,0,0]
+        var oomaeCount: Int = 0
+        var nakaCount: Int = 0
+        var otiCount: Int = 0
+        // 空なら0をそのまま返す
+        if scores.count == 0 {return playersScore}
+        scores.enumerated().forEach{ (index,score) in
+            if index % 3 == 0{ // 大前の場合
+                oomaeCount += Int(score)
+            }else if index % 3 == 1{
+                nakaCount += Int(score)
+            }else{
+                otiCount += Int(score)
+            }
+        }
+        // カウントが揃ったので割って返す
+        playersScore[0] = oomaeCount
+        playersScore[1] = nakaCount
+        playersScore[2] = otiCount
+        
+        return playersScore
     }
 }

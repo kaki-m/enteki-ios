@@ -15,9 +15,11 @@ struct Analysis: View {
             let width = geometry.size.width  // **左半分にフィット**
             VStack {
                 ScoreGraph()
+                    .offset(x:width*0.04)
                 ZStack {
                     HeatMap()
                         .frame(maxWidth: .infinity)
+                        .offset(x:width*0.03)
                     Spacer()
                     ScoreRatioTable()
                         .frame(width:width/2)
