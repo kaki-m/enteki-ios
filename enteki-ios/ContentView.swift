@@ -145,6 +145,7 @@ struct ContentView: View {
             let targetCenterPositionString = "(\(arrowData.targetCenterPosition.x), \(arrowData.targetCenterPosition.y))"
             let targetDiameterString = "\(arrowData.targetDiameter)"
             if arrowData.targetBackgroundColor == "green" { // 背景がグリーンなら新規追加だからid指定せずに自動生成
+                print("save without id")
                 DatabaseManager.shared.insertScoreRecord(
                     date: dateString,
                     positionData: positionsString,
@@ -154,7 +155,8 @@ struct ContentView: View {
                     scoreText: scoreTextsString,
                     playerNames: playerNamesString
                 )
-            }else if arrowData.targetBackgroundColor == "bule" {
+            }else if arrowData.targetBackgroundColor == "blue" {
+                print("save with id")
                 DatabaseManager.shared.insertScoreRecord(
                     id: arrowData.pastResultId,
                     date: dateString,
