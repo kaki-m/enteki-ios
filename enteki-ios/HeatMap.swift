@@ -14,7 +14,7 @@ struct HeatMap: View {
     var body: some View {
     HStack {
         GeometryReader { geometry in
-            let width = geometry.size.width * 0.5  // **左半分にフィット**
+            let width = geometry.size.width * 0.43  // **左半分にフィット**
             let height = width  // **正方形に近い形にする**
             let centerX = width * 0.5  // **中央**
             let centerY = height * 0.001  // **さらに上に移動**
