@@ -120,6 +120,7 @@ struct ContentView: View {
         arrowData.pastResultId = -1
         arrowData.positions = []
         arrowData.scores = []
+        arrowData.memo = ""
         arrowData.scoresTexts = ["-","-","-","-","-","-","-","-","-","-","-","-"]
         arrowData.targetBackgroundColor = "green"
         arrowData.recoredDateTime = {
@@ -153,7 +154,8 @@ struct ContentView: View {
                     targetCenterPosition: targetCenterPositionString,
                     targetDiameter: targetDiameterString,
                     scoreText: scoreTextsString,
-                    playerNames: playerNamesString
+                    playerNames: playerNamesString,
+                    memo: arrowData.memo
                 )
             }else if arrowData.targetBackgroundColor == "blue" {
                 print("save with id")
@@ -165,7 +167,8 @@ struct ContentView: View {
                     targetCenterPosition: targetCenterPositionString,
                     targetDiameter: targetDiameterString,
                     scoreText: scoreTextsString,
-                    playerNames: playerNamesString
+                    playerNames: playerNamesString,
+                    memo: arrowData.memo
                 )
             }
             
@@ -377,6 +380,7 @@ struct HitMarkView: View {
                             }
                         }) {
                             Image(systemName: "plus.diamond")
+                                .imageScale(.large)
                         }
                         .padding(15)
                     }

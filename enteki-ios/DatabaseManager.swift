@@ -13,9 +13,10 @@ class DatabaseManager {
     let targetDiameter = SQLite.Expression<String>("targetDiameter")
     let scoreText = SQLite.Expression<String>("scoreText")
     let playerNames = SQLite.Expression<String>("playerNames")
+    let memo = SQLite.Expression<String>("memo")
 
     private init() {
-//        // デバッグでデータベースを初期化する>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        // デバッグでデータベースを初期化する>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //        do {
 //            let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
 //            let dbPath = documentDirectory.appendingPathComponent("score_database.sqlite3").path
@@ -51,6 +52,7 @@ class DatabaseManager {
                 t.column(targetDiameter)
                 t.column(scoreText)
                 t.column(playerNames)
+                t.column(memo)
             })
             do {
                 try db?.run("UPDATE scores SET score = '' WHERE score IS NULL")
@@ -62,7 +64,7 @@ class DatabaseManager {
         }
     }
 
-    func insertScoreRecord(id: Int? = nil, date: String, positionData: String, score: String, targetCenterPosition: String, targetDiameter: String, scoreText: String, playerNames: String) {
+    func insertScoreRecord(id: Int? = nil, date: String, positionData: String, score: String, targetCenterPosition: String, targetDiameter: String, scoreText: String, playerNames: String, memo: String) {
         do {
             let scores = Table("scores")
             let idColumn = SQLite.Expression<Int64>("id")
@@ -73,6 +75,7 @@ class DatabaseManager {
             let targetDiameterColumn = SQLite.Expression<String>("targetDiameter")
             let scoreTextColumn = SQLite.Expression<String>("scoreText")
             let playerNamesColumn = SQLite.Expression<String>("playerNames")
+            let memoColumn = SQLite.Expression<String>("memo")
 
             if let id = id {
                 // 既存のIDがある場合はUPSERT (idを指定して更新or挿入)
@@ -84,7 +87,8 @@ class DatabaseManager {
                     targetCenterPositionColumn <- targetCenterPosition,
                     targetDiameterColumn <- targetDiameter,
                     scoreTextColumn <- scoreText,
-                    playerNamesColumn <- playerNames
+                    playerNamesColumn <- playerNames,
+                    memoColumn <- memo
                 )
 
                 try db?.run(insert)
@@ -98,7 +102,8 @@ class DatabaseManager {
                     targetCenterPositionColumn <- targetCenterPosition,
                     targetDiameterColumn <- targetDiameter,
                     scoreTextColumn <- scoreText,
-                    playerNamesColumn <- playerNames
+                    playerNamesColumn <- playerNames,
+                    memoColumn <- memo
                 )
 
                 let insertedId = try db?.run(insert)
@@ -109,8 +114,8 @@ class DatabaseManager {
             print("スコアの保存（または更新）に失敗しました: \(error)")
         }
     }
-    func fetchRecordsSummury() -> [(id: Int, date: String, score: String, playerNames: String)] {
-        var records: [(id:Int, date: String, score: String, playerNames: String)] = []
+    func fetchRecordsSummury() -> [(id: Int, date: String, score: String, playerNames: String, memo:String)] {
+        var records: [(id:Int, date: String, score: String, playerNames: String, memo: String)] = []
 
         do {
             let scores = Table("scores")
@@ -118,14 +123,16 @@ class DatabaseManager {
             let dateColumn = SQLite.Expression<String>("date")
             let scoreColumn = SQLite.Expression<String>("score")
             let playerNamesColumn = SQLite.Expression<String>("playerNames")
+            let memoColumn = SQLite.Expression<String>("memo")
 
             for record in try db!.prepare(scores) {
                 let id = record[idColumn]
                 let date = record[dateColumn]
                 let score = (try? record.get(scoreColumn)) ?? ""
                 let playerNames = record[playerNamesColumn]
+                let memo = record[memoColumn]
 
-                records.append((id, date, score, playerNames))
+                records.append((id, date, score, playerNames, memo))
             }
         } catch {
             print("データ取得に失敗しました: \(error)")
@@ -133,7 +140,7 @@ class DatabaseManager {
         
         return records
     }
-    func fetchRecordById(id: Int) -> (date: String, positionData: String, score: String, targetCenterPosition: String, targetDiameter: String, scoreText: String, playerNames: String)? {
+    func fetchRecordById(id: Int) -> (date: String, positionData: String, score: String, targetCenterPosition: String, targetDiameter: String, scoreText: String, playerNames: String, memo: String)? {
         do{
             let scores = Table("scores")
             let idColumn = SQLite.Expression<Int>("id")
@@ -144,6 +151,7 @@ class DatabaseManager {
             let targetDiameterColumn = SQLite.Expression<String>("targetDiameter")
             let scoreTextColumn = SQLite.Expression<String>("scoreText")
             let playerNamesColumn = SQLite.Expression<String>("playerNames")
+            let memoColumn = SQLite.Expression<String>("memo")
             let query = scores.filter(idColumn == id)
             guard let db = db else {
                     print("データベース接続がありません")
@@ -157,7 +165,8 @@ class DatabaseManager {
                 let targetDiameter = record[targetDiameterColumn]
                 let scoreText = record[scoreTextColumn]
                 let playerNames = record[playerNamesColumn]
-                return (date, positionData, score, targetCenterPosition, targetDiameter, scoreText,playerNames)
+                let memo = record[memoColumn]
+                return (date, positionData, score, targetCenterPosition, targetDiameter, scoreText,playerNames, memo)
             }
         }catch{
             print("id:\(id)のデータ取得に失敗")
