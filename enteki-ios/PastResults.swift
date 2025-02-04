@@ -22,6 +22,7 @@ struct PastResults: View {
                         .onTapGesture{
                             showLoadMessage = true
                             let pastResult = DatabaseManager.shared.fetchRecordById(id: record.id)!
+                            arrowData.pastResultId = record.id
                             arrowData.recoredDateTime = pastResult.date
                             arrowData.scores = (try? JSONDecoder().decode([Int].self, from: pastResult.score.data(using: .utf8)!)) ?? []
                             arrowData.playerNames = (try? JSONDecoder().decode([String].self, from: pastResult.playerNames.data(using: .utf8)!)) ?? []

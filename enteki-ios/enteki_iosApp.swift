@@ -21,6 +21,7 @@ class ArrowData: ObservableObject {
     }()
     @Published var playerNames: [String] = ["大前", "中", "落ち"]
     @Published var targetBackgroundColor: String = "green"
+    @Published var pastResultId: Int = -1
 }
 
 
