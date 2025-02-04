@@ -20,6 +20,7 @@ class ArrowData: ObservableObject {
         return formatter.string(from: Date()) // 現在の日時を文字列に変換
     }()
     @Published var playerNames: [String] = ["大前", "中", "落ち"]
+    @Published var targetBackgroundColor: String = "green"
 }
 
 

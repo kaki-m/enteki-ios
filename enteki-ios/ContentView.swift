@@ -16,19 +16,22 @@ struct ContentView: View {
     init() {
             let appearance = UINavigationBarAppearance()
             appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor(red:52/255, green: 136/255, blue:00, alpha: 100)
+            appearance.backgroundColor = UIColor(red:52/255, green: 136/255, blue:00, alpha: 100)
             appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
             appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
             UINavigationBar.appearance().standardAppearance = appearance
             UINavigationBar.appearance().scrollEdgeAppearance = appearance
         }
     var body: some View {
-            let color = UIColor(red: 122/255, green: 191/255, blue: 120/255, alpha: 1.0)
-            let bodyColor = Color(uiColor: color)
+        var color = colorByEnv(envColor:arrowData.targetBackgroundColor)
+        var navigationColor = Color(uiColor: color)
+        var bodyColor = Color(navigationColor.opacity(0.3))
+        let topBarDate = formatDateTime(arrowData.recoredDateTime)
+            
             NavigationView {
                 ZStack {
                     KyudoTargetView()
-                        .navigationBarTitle("\(arrowData.scores.reduce(0, +))点")
+                        .navigationBarTitle("\(topBarDate)   \(arrowData.scores.reduce(0, +))点")
                         .navigationBarItems(
                                 leading: Button(action: {
                                     print("初期化ボタンが押されました") // ここに処理を追加
@@ -37,13 +40,15 @@ struct ContentView: View {
                                     Image(systemName: "arrow.uturn.backward") // ← SF Symbols のアイコン
                                         .foregroundColor(.white)
                                 },
-                                trailing: Button(action: {  //結果保存ボタンfdjfkl；亞fjl；だf；あｄ
+                                trailing: Button(action: {  //結果保存ボタン
                                     saveData()
                                 }){
                                     Image(systemName: "square.and.arrow.down") // 保存アイコンを設定
                                         .foregroundColor(.white)
                                 })
                         .navigationBarTitleDisplayMode(.inline)
+                        .toolbarBackground(Color(navigationColor), for: .navigationBar)
+                        .toolbarBackground(.visible, for: .navigationBar)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .background(bodyColor)
                     
@@ -115,6 +120,7 @@ struct ContentView: View {
         arrowData.positions = []
         arrowData.scores = []
         arrowData.scoresTexts = ["-","-","-","-","-","-","-","-","-","-","-","-"]
+        arrowData.targetBackgroundColor = "green"
         arrowData.recoredDateTime = {
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy/MM/dd HH:mm:ss" // フォーマット指定
@@ -153,6 +159,30 @@ struct ContentView: View {
             print("JSONエンコードに失敗しました: \(error)")
         }
         resetArrowData(saved: true)
+    }
+    func formatDateTime(_ dateTimeString: String) -> String {
+        let inputFormatter = DateFormatter()
+        inputFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
+        inputFormatter.locale = Locale(identifier: "ja_JP") // 日本のロケール
+
+        if let date = inputFormatter.date(from: dateTimeString) {
+            let outputFormatter = DateFormatter()
+            outputFormatter.dateFormat = "MM/dd HH:mm"
+            return outputFormatter.string(from: date)
+        } else {
+            return "変換失敗"
+        }
+    }
+    func colorByEnv(envColor: String) -> UIColor {
+        var returnColor: UIColor
+        if envColor == "green" {
+            returnColor = UIColor(red: 100/255, green: 170/255, blue: 100/255, alpha: 1.0) // 少し濃い緑
+        } else if envColor == "blue" {
+            returnColor = UIColor(red: 120/255, green: 170/255, blue: 230/255, alpha: 1.0) // 少し濃い青
+        }else{
+            returnColor = UIColor(red: 1/255, green: 1/255, blue: 1/255, alpha: 1.0)
+        }
+        return returnColor
     }
 }
 
