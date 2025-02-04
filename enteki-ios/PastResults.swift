@@ -26,8 +26,19 @@ struct PastResults: View {
                             arrowData.recoredDateTime = pastResult.date
                             arrowData.scores = (try? JSONDecoder().decode([Int].self, from: pastResult.score.data(using: .utf8)!)) ?? []
                             arrowData.playerNames = (try? JSONDecoder().decode([String].self, from: pastResult.playerNames.data(using: .utf8)!)) ?? []
-                            arrowData.targetCenterPosition = (try? JSONDecoder().decode(CGPoint.self, from: pastResult.targetCenterPosition.data(using: .utf8)!)) ?? CGPoint(x:0,y:0)
-                            arrowData.targetDiameter = (try? JSONDecoder().decode(CGFloat.self, from: pastResult.targetDiameter.data(using: .utf8)!)) ?? CGFloat(0)
+                            let components = pastResult.targetCenterPosition.split(separator: ",")
+                            if components.count == 2 {
+                                let xString = components[0].trimmingCharacters(in: .whitespaces)
+                                let yString = components[1].trimmingCharacters(in: .whitespaces)
+
+                                if let x = Double(xString), let y = Double(yString) {
+                                    arrowData.targetCenterPosition = CGPoint(x: x, y: y)
+                                }
+                            }
+                            if let cgFloatDiameter = Double(pastResult.targetDiameter){
+                                arrowData.targetDiameter = CGFloat(cgFloatDiameter)
+                            }
+
                             arrowData.scoresTexts = (try? JSONDecoder().decode([String].self, from: pastResult.scoreText.data(using: .utf8)!)) ?? []
                             arrowData.positions = (try? JSONDecoder().decode([CGPoint].self, from: pastResult.positionData.data(using: .utf8)!)) ?? []
                             arrowData.targetBackgroundColor = "blue"
