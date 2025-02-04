@@ -13,19 +13,19 @@ struct ScoreBoard: View {
         GeometryReader { geometry in
             let cellWidth = geometry.size.width / CGFloat(columns.count + 1) // セル幅を動的計算
             let cellHeight = geometry.size.height / CGFloat(rows.count + 2) // セル高さを動的計算
+            let viewWidth = geometry.size.width
         
             VStack(spacing: 0) {
                 // ヘッダー
                 HStack(spacing: 1) {
                     Text("")
-                        .frame(width: cellWidth-20, height: cellHeight) // 左上の空白セル
+                        .frame(width: cellWidth-20, height: 25) // 左上の空白セル
                     
                     ForEach(columns, id: \.self) { column in
                         Text(column)
                             .bold()
-                            .frame(width: cellWidth-5, height: cellHeight)
-                            .background(Color.gray.opacity(0.5))
-                            .border(Color.black, width: 1)
+                            .frame(width: cellWidth-5, height: 25)
+                            .cornerRadius(3)
                     }
                 }
 
@@ -34,21 +34,28 @@ struct ScoreBoard: View {
                     HStack(spacing: 1) {
                         TextField(rows[row], text: $arrowData.playerNames[row])
                             .bold()
-                            .frame(width: cellWidth-20, height: cellHeight)
+                            .frame(width: cellWidth-20, height: cellHeight+8)
                             .background(Color.gray.opacity(0.5))
                             .border(Color.black, width: 1)
+                            .cornerRadius(3)
 
                         ForEach(0..<columns.count, id: \.self) { col in
                                 Text(scores[row][col])
-                                    .frame(width: cellWidth-5, height: cellHeight)
+                                    .frame(width: cellWidth-5, height: cellHeight+8)
                                     // 得点ごとの色に背景色を設定
                                     .background(backgroundColor(for: row, col: col))
                                     .border(Color.black, width: 1)
+                                    .cornerRadius(3)
                             }
                         }
                     }
                 
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                
+                TextField("メモ欄", text: $arrowData.memo)
+                    .frame(width:viewWidth*0.9, height: 40)
+                    .border(Color.black, width: 1)
+                    .cornerRadius(5)
             }
             .padding(EdgeInsets(top: 1, leading: 1, bottom: 1, trailing: 1))
             .onAppear(){
@@ -61,6 +68,7 @@ struct ScoreBoard: View {
                 resetScores()
             }
         }
+        
     }
     func updateScores() {
         let scoreNum = arrowData.scores.count
@@ -126,9 +134,8 @@ struct ScoreBoard: View {
         case 10:
             return Color.yellow.opacity(0.3)
         default:
-            return Color.gray.opacity(0.2)
+            return Color.gray.opacity(0.05)
             }
         }
     
 }
-

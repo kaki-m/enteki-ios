@@ -2,7 +2,7 @@ import SwiftUI
 
 struct PastResults: View {
     @EnvironmentObject var arrowData: ArrowData // 環境オブジェクトとして受け取る
-    @State private var records: [(id: Int, date: String, score: String, playerNames: String)] = []
+    @State private var records: [(id: Int, date: String, score: String, playerNames: String, memo:String)] = []
     @State private var dataExist: Bool = false // `@State` に変更
     @State private var showLoadMessage: Bool = false
 
@@ -15,7 +15,12 @@ struct PastResults: View {
                         let playerNamesArray: [String] = (try? JSONDecoder().decode([String].self, from: record.playerNames.data(using: .utf8)!)) ?? []
                         VStack(alignment: .leading) {
                             Text("日付: \(record.date)")
-                            Text("合計点: \(scoreArray.reduce(0,+))")
+                            HStack(){
+                                Text("合計点: \(scoreArray.reduce(0,+))")
+                                Spacer()
+                                Text(record.memo.count > 15 ? "\(record.memo.prefix(10))..." : record.memo)
+
+                            }
                             Text("\(playerNamesArray[0]), \(playerNamesArray[1]),  \(playerNamesArray[2])")
                         }
                         .padding()
@@ -24,6 +29,7 @@ struct PastResults: View {
                             let pastResult = DatabaseManager.shared.fetchRecordById(id: record.id)!
                             arrowData.pastResultId = record.id
                             arrowData.recoredDateTime = pastResult.date
+                            arrowData.memo = pastResult.memo
                             arrowData.scores = (try? JSONDecoder().decode([Int].self, from: pastResult.score.data(using: .utf8)!)) ?? []
                             arrowData.playerNames = (try? JSONDecoder().decode([String].self, from: pastResult.playerNames.data(using: .utf8)!)) ?? []
                             let components = pastResult.targetCenterPosition.split(separator: ",")
