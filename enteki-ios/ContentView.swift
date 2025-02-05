@@ -27,6 +27,7 @@ struct ContentView: View {
         let navigationColor = Color(uiColor: color)
         let bodyColor = Color(navigationColor.opacity(0.3))
         let topBarDate = formatDateTime(arrowData.recoredDateTime)
+        let showdStatus = colorToStatus(color: arrowData.targetBackgroundColor)
             
             NavigationView {
                 ZStack {
@@ -53,6 +54,13 @@ struct ContentView: View {
                         .toolbar {
                             ToolbarItem(placement: .principal) {
                                 ZStack {
+                                            HStack {
+                                                Text(showdStatus)
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.black)
+                                                    .padding(.leading, 10) // 右側の余白を調整
+                                                Spacer()
+                                            }
                                             Text("\(arrowData.scores.reduce(0, +))点")
                                                 .font(.system(size: 24, weight: .bold))
 
@@ -223,6 +231,18 @@ struct ContentView: View {
             returnColor = UIColor(red: 1/255, green: 1/255, blue: 1/255, alpha: 1.0)
         }
         return returnColor
+    }
+    func colorToStatus(color: String) -> String{
+        var returnStatus: String
+        if color == "green" {
+            returnStatus = ""
+        }else if color == "blue"{
+            returnStatus = "過去データ"
+        }else{
+            returnStatus = "以上ステータス"
+        }
+        return returnStatus
+        
     }
 }
 
