@@ -174,5 +174,25 @@ class DatabaseManager {
         }
         return nil
     }
+    func deleteRecordById(id: Int) -> Bool {
+        do {
+            let scores = Table("scores")
+            let idColumn = SQLite.Expression<Int>("id")
+            let query = scores.filter(idColumn == id)
+
+            let deletedCount = try db?.run(query.delete()) ?? 0
+            if deletedCount > 0 {
+                print("id:\(id) のデータを削除しました")
+                return true
+            } else {
+                print("id:\(id) のデータが見つかりませんでした")
+                return false
+            }
+        } catch {
+            print("id:\(id) のデータ削除に失敗しました: \(error)")
+            return false
+        }
+    }
+
 
 }
