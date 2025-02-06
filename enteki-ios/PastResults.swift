@@ -8,6 +8,7 @@ struct PastResults: View {
     @State private var showDeleteAlert: Bool = false
     @State private var deleteTargetId: Int? // 削除対象のIDを保存
 
+
     var body: some View {
         ZStack {
             VStack {
@@ -76,7 +77,11 @@ struct PastResults: View {
                     }
             }
         }
+        .onChange(of: arrowData.positions){
+            refetchData()
+        }
     }
+        
     
     private func loadRecord(_ record: (id: Int, date: String, score: String, playerNames: String, memo: String)) {
         showLoadMessage = true
@@ -115,5 +120,9 @@ struct PastResults: View {
         } else {
             print("削除失敗")
         }
+    }
+    func refetchData() {
+        records = DatabaseManager.shared.fetchRecordsSummury()
+        dataExist = !records.isEmpty
     }
 }
