@@ -9,11 +9,17 @@ struct ScoreRatioTable: View {
             let width = geometry.size.width * 0.5  // **左半分にフィット**
             let hitRatios: [Double] = getHitRatio(scores: arrowData.scores)
             let scoreRatios: [Int] = getPlayersScore(scores: arrowData.scores)
+            let fontSize : CGFloat =  UIDevice.current.userInterfaceIdiom == .pad ? 50 : 21
             VStack(spacing: 5) { // 行間の間隔を調整
                 HStack {
                     Text("　　")
+                        .font(.system(size: fontSize))
+                    Spacer()
                     Text("的中率")
+                        .font(.system(size: fontSize))
+                    Spacer()
                     Text("得点")
+                        .font(.system(size: fontSize))
                 }
                 .font(.headline)
                 .padding(.bottom, 5)
@@ -26,26 +32,35 @@ struct ScoreRatioTable: View {
                 
                 HStack {
                     Text("大前")
+                        .font(.system(size: fontSize))
                     Spacer()
                     Text("\(String(format: "%.0f", hitRatios[0]))%")
+                        .font(.system(size: fontSize))
                     Spacer()
                     Text("\(scoreRatios[0])点")
+                        .font(.system(size: fontSize))
                 }
                 
                 HStack {
                     Text("中　")
+                        .font(.system(size: fontSize))
                     Spacer()
                     Text("\(String(format: "%.0f", hitRatios[1]))%")
+                        .font(.system(size: fontSize))
                     Spacer()
                     Text("\(scoreRatios[1])点")
+                        .font(.system(size: fontSize))
                 }
                 
                 HStack {
                     Text("落ち")
+                        .font(.system(size: fontSize))
                     Spacer()
                     Text("\(String(format: "%.0f", hitRatios[2]))%")
+                        .font(.system(size: fontSize))
                     Spacer()
                     Text("\(scoreRatios[2])点")
+                        .font(.system(size: fontSize))
                 }
             }
             .position(x:width)
