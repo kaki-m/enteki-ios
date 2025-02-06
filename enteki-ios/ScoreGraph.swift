@@ -10,7 +10,7 @@ struct ScoreGraph: View {
                 let scores: [Int] = arrowData.scores
                 var tmp_score: Int = 0
                 let width = geometry.size.width * 0.9
-                let height = geometry.size.height * 0.5
+                let height = UIDevice.current.userInterfaceIdiom == .pad ? geometry.size.height * 0.7 : geometry.size.height * 0.5
                 
                 let maxX: CGFloat = 13  // X 軸を 1〜12 に固定
                 let maxY: CGFloat = 120 // Y 軸を 0〜120 に固定

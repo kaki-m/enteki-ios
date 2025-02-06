@@ -28,7 +28,6 @@ struct ContentView: View {
         let bodyColor = Color(navigationColor.opacity(0.3))
         let topBarDate = formatDateTime(arrowData.recoredDateTime)
         let showdStatus = colorToStatus(color: arrowData.targetBackgroundColor)
-            
             NavigationView {
                 ZStack {
                     KyudoTargetView()
@@ -249,27 +248,36 @@ struct ContentView: View {
 
 struct TabBarView: View {
     @EnvironmentObject var arrowData: ArrowData
+    let tabItemSize: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 50 : 10
+    init() {
+            let appearance = UITabBarAppearance()
+            appearance.stackedLayoutAppearance.normal.titleTextAttributes = [.font: UIFont.systemFont(ofSize: tabItemSize)]
+            appearance.stackedLayoutAppearance.selected.titleTextAttributes = [.font: UIFont.boldSystemFont(ofSize: tabItemSize + 2)]
+            UITabBar.appearance().standardAppearance = appearance
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
 
     var body: some View {
         TabView {
             ScoreBoard()
                 .tabItem {
-                    Image(systemName: "1.circle")
+                    Image(systemName: "tablecells")
                     Text("得点版")
                 }
 
             Analysis()
                 .tabItem {
-                    Image(systemName: "2.circle")
+                    Image(systemName: "chart.xyaxis.line")
                     Text("分析")
                 }
 
             PastResults()
                 .tabItem {
-                    Image(systemName: "3.circle")
+                    Image(systemName: "archivebox")
                     Text("過去データ")
                 }
         }
+        
         
     }
 }
@@ -305,6 +313,9 @@ struct KyudoTargetView: View {
                     .onAppear {
                         arrowData.targetCenterPosition = CGPoint(x: geometry.size.width / 2,
                                                                 y: geometry.size.height / 2)
+                        if UIDevice.current.userInterfaceIdiom == .pad {
+                            arrowData.targetDiameter = 500
+                        }
                     }
                     .opacity(0.9)
                 Circle()
@@ -333,6 +344,8 @@ struct KyudoTargetView: View {
 
 struct HitMarkView: View {
     @EnvironmentObject var arrowData: ArrowData
+    let markSize: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 50 : 30
+    let markTextSize: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 25 : 15
 
     var body: some View {
         GeometryReader { geometry in // ここで全体のサイズを取得
@@ -345,7 +358,7 @@ struct HitMarkView: View {
                         Image("Hitmark")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 30, height: 30)
+                            .frame(width: markSize, height: markSize)
                             .position(x: arrowData.positions[index].x, y: arrowData.positions[index].y)
                             .gesture(
                                 DragGesture(minimumDistance: 0)
@@ -360,11 +373,13 @@ struct HitMarkView: View {
                         Text("前")
                             .position(x: arrowData.positions[index].x+17, y:arrowData.positions[index].y-10 )
                             .foregroundColor(.brown)
+                            .font(.system(size: markTextSize))
+                            .bold()
                     }else if index % 3 == 1 {
                         Image("Hitmark")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 30, height: 30)
+                            .frame(width: markSize, height: markSize)
                             .position(x: arrowData.positions[index].x, y: arrowData.positions[index].y)
                             .gesture(
                                 DragGesture(minimumDistance: 0)
@@ -378,11 +393,13 @@ struct HitMarkView: View {
                         Text("中")
                             .position(x: arrowData.positions[index].x+17, y:arrowData.positions[index].y-10 )
                             .foregroundColor(.brown)
+                            .font(.system(size: markTextSize))
+                            .bold()
                     }else{
                         Image("Hitmark")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 30, height: 30)
+                            .frame(width: markSize, height: markSize)
                             .position(x: arrowData.positions[index].x, y: arrowData.positions[index].y)
                             .gesture(
                                 DragGesture(minimumDistance: 0)
@@ -396,6 +413,8 @@ struct HitMarkView: View {
                         Text("落")
                             .position(x: arrowData.positions[index].x+17, y:arrowData.positions[index].y-10)
                             .foregroundColor(.brown)
+                            .font(.system(size: markTextSize))
+                            .bold()
                     }
                     // 得点計算点の位置確認用
                     Circle()
@@ -407,6 +426,7 @@ struct HitMarkView: View {
                     Text(subtext)
                         .position(x: arrowData.positions[index].x + 17, y: arrowData.positions[index].y + 10)
                         .foregroundColor(.brown)
+                        .font(.system(size: markTextSize))
                 }
 
                 VStack {

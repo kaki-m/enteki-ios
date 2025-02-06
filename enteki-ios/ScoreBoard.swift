@@ -12,8 +12,11 @@ struct ScoreBoard: View {
     var body: some View {
         GeometryReader { geometry in
             let cellWidth = geometry.size.width / CGFloat(columns.count + 1) // セル幅を動的計算
-            let cellHeight = geometry.size.height / CGFloat(rows.count + 2) // セル高さを動的計算
+            let cellHeight: CGFloat = UIDevice.current.userInterfaceIdiom == .pad
+                    ? geometry.size.height / CGFloat(rows.count + 2) + 30
+                    : geometry.size.height / CGFloat(rows.count + 2)
             let viewWidth = geometry.size.width
+            let fontSize: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 50 : 24
         
             VStack(spacing: 0) {
                 // ヘッダー
@@ -35,6 +38,7 @@ struct ScoreBoard: View {
                         ZStack(alignment: .trailing) { // 右寄せ配置
                             TextField(rows[row], text: $arrowData.playerNames[row])
                                 .bold()
+                                .font(.system(size: fontSize))
                                 .padding(.leading, 5) // 文字の開始位置をボーダーの右にずらす
                                 .frame(width: cellWidth - 20, height: cellHeight + 8)
                                 .background(Color.gray.opacity(0.5))
@@ -56,6 +60,7 @@ struct ScoreBoard: View {
                                     .background(backgroundColor(for: row, col: col))
                                     .border(Color.black, width: 2)
                                     .cornerRadius(3)
+                                    .font(.system(size: fontSize))
                             }
                         }
                     }
