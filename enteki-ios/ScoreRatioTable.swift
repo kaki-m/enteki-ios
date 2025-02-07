@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ScoreRatioTable: View {
     @EnvironmentObject var arrowData: ArrowData
-    
+    @Environment(\.colorScheme) var colorScheme
     var body: some View {
         
         GeometryReader { geometry in
@@ -26,7 +26,7 @@ struct ScoreRatioTable: View {
                 .overlay(
                     Rectangle()
                         .frame(height: 1) // 線の太さ
-                        .foregroundColor(.black), // 線の色
+                        .foregroundColor(colorScheme == .dark ? .white : .black), // 線の色
                     alignment: .bottom
                 )
                 
