@@ -16,7 +16,7 @@ class DatabaseManager {
     let memo = SQLite.Expression<String>("memo")
 
     private init() {
-        // デバッグでデータベースを初期化する>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//         デバッグでデータベースを初期化する>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //        do {
 //            let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
 //            let dbPath = documentDirectory.appendingPathComponent("score_database.sqlite3").path
@@ -28,7 +28,7 @@ class DatabaseManager {
 //        } catch {
 //            print("データベースの削除に失敗しました: \(error)")
 //        }
-        //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ここまで
+//        <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ここまで
         do {
             let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
             let dbPath = documentDirectory.appendingPathComponent("score_database.sqlite3").path
