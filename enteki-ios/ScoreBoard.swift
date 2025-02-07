@@ -9,6 +9,7 @@ struct ScoreBoard: View {
         ["-", "-", "-", "-"],
         ["-", "-", "-", "-"]
     ]
+    @Environment(\.colorScheme) var colorScheme  // ダークモードを識別
     var body: some View {
         GeometryReader { geometry in
             let cellWidth = geometry.size.width / CGFloat(columns.count + 1) // セル幅を動的計算
@@ -70,7 +71,7 @@ struct ScoreBoard: View {
                 TextField("メモ欄", text: $arrowData.memo)
                     .padding(.leading, 5)
                     .frame(width:viewWidth*0.9, height: 40)
-                    .border(Color.black, width: 2)
+                    .border(colorScheme == .dark ? Color.white : Color.black, width: 2)
                     .cornerRadius(5)
                     
             }
