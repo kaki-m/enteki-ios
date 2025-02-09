@@ -17,7 +17,7 @@ struct HeatMap: View {
             let width = geometry.size.width * 0.43  // **左半分にフィット**
             let height = width  // **正方形に近い形にする**
             let centerX = width * 0.5  // **中央**
-            let centerY = UIDevice.current.userInterfaceIdiom == .pad ? height * 0.35 : height * 0
+            let centerY = UIDevice.current.userInterfaceIdiom == .pad ? height * 0.35 : 0
             let radius = width * 0.4  // **円のサイズを調整**
             let rectangleWidth = UIDevice.current.userInterfaceIdiom == .pad ? radius * 1.15 : radius * 1.3
             let rectangleHeight = rectangleWidth // **四角形のサイズも調整**

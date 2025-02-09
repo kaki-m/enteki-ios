@@ -301,6 +301,7 @@ struct KyudoTargetView: View {
 
     var body: some View {
         GeometryReader { geometry in
+            let targetViewHeight : CGFloat = geometry.size.height
             ZStack {
                 Circle()
                     .fill(Color.white)
@@ -315,6 +316,8 @@ struct KyudoTargetView: View {
                                                                 y: geometry.size.height / 2)
                         if UIDevice.current.userInterfaceIdiom == .pad {
                             arrowData.targetDiameter = 500
+                        }else{
+                            arrowData.targetDiameter = targetViewHeight
                         }
                     }
                     .opacity(0.9)
