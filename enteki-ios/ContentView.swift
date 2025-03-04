@@ -36,14 +36,24 @@ struct ContentView: View {
                                     print("初期化ボタンが押されました") // ここに処理を追加
                                     resetArrowData(saved: false)
                                 }) {
-                                    Image(systemName: "arrow.uturn.backward") // ← SF Symbols のアイコン
-                                        .foregroundColor(.white)
+                                    VStack(spacing: 2) {
+                                                    Image(systemName: "arrow.uturn.backward")
+                                                        .imageScale(.large) // 必要に応じてサイズ調整
+                                                    Text("リセット")
+                                                        .font(.caption)
+                                                }
+                                    .foregroundColor(.white)
                                 },
                                 trailing: Button(action: {  //結果保存ボタン
                                     saveData()
                                 }){
-                                    Image(systemName: "square.and.arrow.down") // 保存アイコンを設定
-                                        .foregroundColor(.white)
+                                    VStack(spacing: 2) {
+                                                    Image(systemName: "square.and.arrow.down")
+                                                        .imageScale(.large)
+                                                    Text("保存")
+                                                        .font(.caption)
+                                                }
+                                    .foregroundColor(.white)
                                 })
                         .navigationBarTitleDisplayMode(.inline)
                         .toolbarBackground(Color(navigationColor), for: .navigationBar)
