@@ -28,6 +28,7 @@ struct PastResults: View {
                                 Text("\(playerNamesArray[0]), \(playerNamesArray[1]), \(playerNamesArray[2])")
                             }
                             .padding()
+                            .contentShape(Rectangle()) // 文字だけでなくタップの機能が四角全体に適用されるため
                             .onTapGesture {
                                 loadRecord(record)
                             }
